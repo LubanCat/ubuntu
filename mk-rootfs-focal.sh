@@ -142,7 +142,7 @@ ln -s /system/etc/firmware /vendor/etc/
 if [ "$VERSION" == "debug" ]; then
 #------------------glmark2------------
 echo -e "\033[36m Install glmark2.................... \033[0m"
-\${APT_INSTALL} /packages/glmark2/*.deb
+\${APT_INSTALL} glmark2-es2
 fi
 
 #------------------rknpu2------------

@@ -52,8 +52,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 apt-get -y update
 apt-get -f -y upgrade
 
-DEBIAN_FRONTEND=noninteractive apt install -y tasksel gnome-session gdm3
-apt install -y tasksel tasksel install ubuntu-desktop
+DEBIAN_FRONTEND=noninteractive apt install -y gnome-session gdm3 ubuntu-desktop
 apt install -y rsyslog wget gdb net-tools inetutils-ping openssh-server ifupdown alsa-utils python vim ntp git libssl-dev vsftpd tcpdump can-utils i2c-tools strace network-manager onboard evtest
 apt install -y language-pack-zh-han* language-pack-en $(check-language-support) ibus-libpinyin language-pack-gnome-zh-hans gnome-getting-started-docs-zh-hk
 apt install -y blueman
@@ -61,7 +60,6 @@ echo exit 101 > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 apt install -y blueman
 rm -f /usr/sbin/policy-rc.d
-
 
 HOST=ubuntu
 

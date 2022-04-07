@@ -21,7 +21,7 @@ elif [[  "$1" == "rk3588" || "$1" == "rk3588s"  ]]; then
 	taskset -c 4-8 glmark2-es2 --fullscreen --visual-config='a=0:buf=24' --annotate
 
 elif [[  "$1" == "px30" || "$1" == "rk3326"  ]]; then
-	glmark2-es2-wayland --visual-config='a=0:buf=24' --annotate
+	glmark2-es2 --visual-config='a=0:buf=24' --annotate
 
 elif [[  "$1" == "rk1808" || "$1" == "rk3308"  ]]; then
 	echo "the chips didn't support gpu"

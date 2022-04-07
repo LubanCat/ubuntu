@@ -2,7 +2,7 @@
 
 TARGET_ROOTFS_DIR=./binary
 MOUNTPOINT=./rootfs
-ROOTFSIMAGE=linaro-rootfs.img
+ROOTFSIMAGE=ubuntu-focal.img
 
 echo Making rootfs!
 

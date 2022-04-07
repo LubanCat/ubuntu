@@ -90,6 +90,16 @@ then
     install_mali ${CHIPNAME}
     setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
 
+    # Cannot open pixbuf loader module file
+    if [ -e "/usr/lib/arm-linux-gnueabihf" ] ;
+    then
+       /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
+       update-mime-database /usr/share/mime/
+    elif [ -e "/usr/lib/aarch64-linux-gnu" ];
+    then
+       /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+    fi
+
     rm -rf /packages
 
     # The base target does not come with gdm3
