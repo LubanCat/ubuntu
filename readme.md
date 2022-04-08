@@ -32,3 +32,15 @@ VERSION=debug ARCH=arm64 ./mk-rootfs-focal.sh
 ## Cross Compile for ARM Debian
 
 [Docker + Multiarch](http://opensource.rock-chips.com/wiki_Cross_Compile#Docker)
+
+## History
+
+- Focal/20.04 with Gnome X11 working on rk3588
+
+- GPU/RGA hardware accelerated for graphic display
+
+- With gdm3 serivce and autologin
+
+- QT+Gstreamer and MPV+ffmpeg video encode/decode working
+
+- Add rockchip-test for stressing tests
