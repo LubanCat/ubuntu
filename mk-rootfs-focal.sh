@@ -184,6 +184,9 @@ apt list --installed | grep -v oldstable | cut -d/ -f1 | xargs apt-mark hold
 \${APT_INSTALL} mpv
 \${APT_INSTALL} /packages/mpv/*.deb
 
+# HACK to disable the kernel logo on bootup
+sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
+
 #---------------Custom Script--------------
 systemctl mask systemd-networkd-wait-online.service
 systemctl mask NetworkManager-wait-online.service
