@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 if [ ! $RELEASE ]; then
-	RELEASE='stretch'
+	RELEASE='jammy'
 fi
 
 ./mk-rootfs-$RELEASE.sh

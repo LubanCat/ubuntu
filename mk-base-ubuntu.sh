@@ -18,11 +18,11 @@ fi
 if [ ! -d $TARGET_ROOTFS_DIR ] ; then
     sudo mkdir -p $TARGET_ROOTFS_DIR
 
-    if [ ! -e ubuntu-base-20.04.4-base-$ARCH.tar.gz ]; then
-        echo "\033[36m wget ubuntu-base-20.04-base-x.tar.gz \033[0m"
-        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.4-base-$ARCH.tar.gz
+    if [ ! -e ubuntu-base-22.04-beta-base-$ARCH.tar.gz ]; then
+        echo "\033[36m wget ubuntu-base-22.04-beta-base-x.tar.gz \033[0m"
+        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04-base-$ARCH.tar.gz
     fi
-    sudo tar -xzvf ubuntu-base-20.04.4-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
+    sudo tar -xzvf ubuntu-base-22.04-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
     sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
 #    sudo sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' $TARGET_ROOTFS_DIR/etc/apt/sources.list
 #    sudo cp -b sources.list $TARGET_ROOTFS_DIR/etc/apt/

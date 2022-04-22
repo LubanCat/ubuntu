@@ -5,7 +5,7 @@ for rockchip platform.
 
 ## Available Distro
 
-* ubuntu 20.04 (Focal-X11)
+* ubuntu 22.04 (Jammy-X11)
 
 ```
 sudo apt-get install binfmt-support qemu-user-static
@@ -13,19 +13,19 @@ sudo dpkg -i ubuntu-build-service/packages/*
 sudo apt-get install -f
 ```
 
-## Usage for 32bit ubuntu 20.04
+## Usage for 32bit ubuntu 22.04
 
 ```
-ARCH=armhf RELEASE=focal ./mk-base-ubuntu.sh
-VERSION=debug ARCH=armhf ./mk-rootfs-focal.sh
+ARCH=armhf RELEASE=jammy ./mk-base-ubuntu.sh
+VERSION=debug ARCH=armhf ./mk-rootfs-jammy.sh
 ./mk-image.sh
 ```
 
-## Usage for 64bit ubuntu 20.04
+## Usage for 64bit ubuntu 22.04
 
 ```
-ARCH=arm64 RELEASE=focal ./mk-base-ubuntu.sh
-VERSION=debug ARCH=arm64 ./mk-rootfs-focal.sh
+ARCH=arm64 RELEASE=jammy ./mk-base-ubuntu.sh
+VERSION=debug ARCH=arm64 ./mk-rootfs-jammy.sh
 ./mk-image.sh
 ```
 
