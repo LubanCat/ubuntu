@@ -23,11 +23,27 @@ VERSION=debug ARCH=armhf ./mk-rootfs-focal.sh
 
 ## Usage for 64bit ubuntu 20.04
 
+如果需要构建console版本（控制台版，无桌面），执行1.a、2.a、3。
+
+如果需要构建desktop版本（带桌面），执行1.b、2.b、3。
+
 ```
-ARCH=arm64 RELEASE=focal ./mk-base-ubuntu.sh
-VERSION=debug ARCH=arm64 ./mk-rootfs-focal.sh
+# 1.a 构建 console 版本基础镜像
+ARCH=arm64 ./mk-base-console-ubuntu.sh
+
+# 1.b 构建 desktop 版本基础镜像
+ARCH=arm64  ./mk-base-desktop-ubuntu.sh
+
+# 添加 rk overlay 层
+# 2.a
+VERSION=debug ARCH=arm64 ./mk-console-rootfs.sh
+# 2.b
+VERSION=debug ARCH=arm64 ./mk-desktop-rootfs.sh
+
+# 3 打包ubuntu-rootfs镜像
 ./mk-image.sh
 ```
+
 
 ## Cross Compile for ARM Debian
 

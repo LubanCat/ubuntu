@@ -18,7 +18,7 @@ if [ ! $VERSION ]; then
 	VERSION="release"
 fi
 
-if [ ! -e ubuntu-focal-base-$ARCH.tar.gz ]; then
+if [ ! -e ubuntu-base-desktop-$ARCH.tar.gz ]; then
 	echo "\033[36m Run mk-base-ubuntu.sh first \033[0m"
 	exit -1
 fi
@@ -30,7 +30,8 @@ finish() {
 trap finish ERR
 
 echo -e "\033[36m Extract image \033[0m"
-sudo tar -xpf ubuntu-focal-base-$ARCH.tar.gz
+sudo rm -rf $TARGET_ROOTFS_DIR
+sudo tar -xpf ubuntu-base-desktop-$ARCH.tar.gz
 
 # packages folder
 sudo mkdir -p $TARGET_ROOTFS_DIR/packages
@@ -84,9 +85,12 @@ chmod +x /etc/rc.local
 
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
-#---------------power management --------------
-\${APT_INSTALL} pm-utils triggerhappy bsdmainutils
-cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
+#------------- LubanCat ------------
+\${APT_INSTALL} toilet htop pciutils
+
+# #---------------power management --------------
+# \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
+# cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
@@ -97,10 +101,10 @@ gstreamer1.0-plugins-base-apps qtmultimedia5-examples
 
 \${APT_INSTALL} /packages/mpp/*
 \${APT_INSTALL} /packages/gst-rkmpp/*.deb
-#\${APT_INSTALL} /packages/gstreamer/*.deb
-#\${APT_INSTALL} /packages/gst-plugins-base1.0/*.deb
-#\${APT_INSTALL} /packages/gst-plugins-bad1.0/*.deb
-#\${APT_INSTALL} /packages/gst-plugins-good1.0/*.deb
+\${APT_INSTALL} /packages/gstreamer/*.deb
+\${APT_INSTALL} /packages/gst-plugins-base1.0/*.deb
+\${APT_INSTALL} /packages/gst-plugins-bad1.0/*.deb
+\${APT_INSTALL} /packages/gst-plugins-good1.0/*.deb
 
 #---------Camera---------
 echo -e "\033[36m Install camera.................... \033[0m"
@@ -130,14 +134,14 @@ echo -e "\033[36m Install libdrm-cursor.................... \033[0m"
 sed -i "/libdrm-cursor.so/d" /etc/ld.so.preload
 sed -i "1aexport LD_PRELOAD=libdrm-cursor.so.1" /usr/bin/X
 
-#------------------blueman------------
-echo -e "\033[36m Install blueman.................... \033[0m"
-#\${APT_INSTALL} /packages/blueman/*.deb
+# #------------------blueman------------
+# echo -e "\033[36m Install blueman.................... \033[0m"
+# #\${APT_INSTALL} /packages/blueman/*.deb
 
-#------------------rkwifibt------------
-echo -e "\033[36m Install rkwifibt.................... \033[0m"
-\${APT_INSTALL} /packages/rkwifibt/*.deb
-ln -s /system/etc/firmware /vendor/etc/
+# #------------------rkwifibt------------
+# echo -e "\033[36m Install rkwifibt.................... \033[0m"
+# \${APT_INSTALL} /packages/rkwifibt/*.deb
+# ln -s /system/etc/firmware /vendor/etc/
 
 if [ "$VERSION" == "debug" ]; then
 #------------------glmark2------------
@@ -153,35 +157,37 @@ tar xvf /packages/rknpu2/*.tar -C /
 echo -e "\033[36m Install rktoolkit.................... \033[0m"
 \${APT_INSTALL} /packages/rktoolkit/*.deb
 
-echo -e "\033[36m Install Chinese fonts.................... \033[0m"
-# Uncomment zh_CN.UTF-8 for inclusion in generation
-sed -i 's/^# *\(zh_CN.UTF-8\)/\1/' /etc/locale.gen
-echo "LANG=zh_CN.UTF-8" >> /etc/default/locale
+# # echo -e "\033[36m Install Chinese fonts.................... \033[0m"
+# # # Uncomment zh_CN.UTF-8 for inclusion in generation
+# # sed -i 's/^# *\(zh_CN.UTF-8\)/\1/' /etc/locale.gen
+# # echo "LANG=zh_CN.UTF-8" >> /etc/default/locale
 
-# Generate locale
-locale-gen
+# # # Generate locale
+# # locale-gen
 
-# Export env vars
-echo "export LC_ALL=zh_CN.UTF-8" >> ~/.bashrc
-echo "export LANG=zh_CN.UTF-8" >> ~/.bashrc
-echo "export LANGUAGE=zh_CN.UTF-8" >> ~/.bashrc
+# # # Export env vars
+# # echo "export LC_ALL=zh_CN.UTF-8" >> ~/.bashrc
+# # echo "export LANG=zh_CN.UTF-8" >> ~/.bashrc
+# # echo "export LANGUAGE=zh_CN.UTF-8" >> ~/.bashrc
 
-source ~/.bashrc
+# # source ~/.bashrc
 
-\${APT_INSTALL} ttf-wqy-zenhei fonts-aenigma
-\${APT_INSTALL} xfonts-intl-chinese
+# # \${APT_INSTALL} ttf-wqy-zenhei fonts-aenigma
+# # \${APT_INSTALL} xfonts-intl-chinese
 
-#ln -sf /usr/bin/startxfce4 /etc/alternatives/x-session-manager
+# #ln -sf /usr/bin/startxfce4 /etc/alternatives/x-session-manager
 
-# mark package to hold
-apt list --installed | grep -v oldstable | cut -d/ -f1 | xargs apt-mark hold
+# # mark package to hold
+# apt list --installed | grep -v oldstable | cut -d/ -f1 | xargs apt-mark hold
 
 #------------------ffmpeg------------
+echo -e "\033[36m Install ffmpeg .................... \033[0m"
 \${APT_INSTALL} ffmpeg
 \${APT_INSTALL} /packages/ffmpeg/*.deb
 
 #------------------mpv------------
-\${APT_INSTALL} mpv
+echo -e "\033[36m Install mpv .................... \033[0m"
+\apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y mpv
 \${APT_INSTALL} /packages/mpv/*.deb
 
 # HACK to disable the kernel logo on bootup
@@ -193,8 +199,8 @@ systemctl mask NetworkManager-wait-online.service
 rm /lib/systemd/system/wpa_supplicant@.service
 
 #---------------Clean--------------
+echo -e "\033[36m  Clean Packages or Cache .................... \033[0m"
 rm -rf /var/lib/apt/lists/*
-
 EOF
 
 sudo umount $TARGET_ROOTFS_DIR/dev

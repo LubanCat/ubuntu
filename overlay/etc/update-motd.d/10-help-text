@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+#    10-help-text - print the help text associated with the distro
+
+printf "\n"
+printf " * Documentation:  http://doc.embedfire.com\n"
+printf " * Management:     http://www.embedfire.com\n"
+
