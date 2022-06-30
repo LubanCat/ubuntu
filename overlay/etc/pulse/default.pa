@@ -29,7 +29,6 @@ load-module module-card-restore
 ### stored in /usr/share/application
 load-module module-augment-properties
 
-load-module module-switch-on-connect blacklist=""
 ### Should be after module-*-restore but before module-*-detect
 load-module module-switch-on-port-available
 
@@ -45,10 +44,10 @@ load-module module-switch-on-port-available
 
 ### Automatically load driver modules depending on the hardware available
 .ifexists module-udev-detect.so
-load-module module-udev-detect
+load-module module-udev-detect use_ucm=no
 .else
 ### Use the static hardware detection module (for systems that lack udev support)
-load-module module-detect
+load-module module-detect use_ucm=no
 .endif
 
 ### Automatically connect sink and source if JACK server is present

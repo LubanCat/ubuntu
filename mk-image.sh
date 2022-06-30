@@ -2,7 +2,7 @@
 
 TARGET_ROOTFS_DIR=./binary
 MOUNTPOINT=./rootfs
-ROOTFSIMAGE=ubuntu-focal.img
+ROOTFSIMAGE=ubuntu-rootfs.img
 
 echo Making rootfs!
 
@@ -17,11 +17,11 @@ sudo ./post-build.sh $TARGET_ROOTFS_DIR
 
 # Create directories
 mkdir ${MOUNTPOINT}
-dd if=/dev/zero of=${ROOTFSIMAGE} bs=1M count=0 seek=8000
+dd if=/dev/zero of=${ROOTFSIMAGE} bs=1M count=0 seek=6000
 
 finish() {
 	sudo umount ${MOUNTPOINT} || true
-	echo -e "\e[31m MAKE ROOTFS FAILED.\e[0m"
+	echo -e "[ MAKE ROOTFS FAILED. ]"
 	exit -1
 }
 

@@ -1,7 +1,7 @@
 #start
 [Unit]
 Description=Setup rockchip platform environment
-Before=gdm3.service
+Before=lightdm.service
 After=resize-helper.service
 
 [Service]
