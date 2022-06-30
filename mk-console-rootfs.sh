@@ -85,7 +85,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} toilet htop pciutils
+\${APT_INSTALL} toilet htop pciutils gdisk parted
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
@@ -93,12 +93,6 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 #------------------libdrm------------
 echo -e "\033[36m Install libdrm.................... \033[0m"
 \${APT_INSTALL} /packages/libdrm/*.deb
-
-#------------------ffmpeg------------
-echo -e "\033[36m Install ffmpeg .................... \033[0m"
-# \${APT_INSTALL} ffmpeg
-\${APT_INSTALL} /packages/ffmpeg/*.deb
-
 
 # HACK to disable the kernel logo on bootup
 sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
