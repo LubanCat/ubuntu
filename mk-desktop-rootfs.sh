@@ -86,7 +86,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} toilet htop pciutils
+\${APT_INSTALL} toilet htop pciutils gdisk parted
 
 # #---------------power management --------------
 # \${APT_INSTALL} pm-utils triggerhappy bsdmainutils

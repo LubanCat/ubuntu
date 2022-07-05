@@ -2,13 +2,8 @@
 
 DDR_DIR=/rockchip-test/ddr
 
-RESULT_DIR=/data/cfg/rockchip-test
+RESULT_DIR=/rockchip-test/ddr
 RESULT_LOG=${RESULT_DIR}/memtester.log
-
-if [ ! -e "/data/cfg/rockchip-test" ]; then
-	echo "no /data/cfg/rockchip-test"
-	mkdir -p /data/cfg/rockchip-test
-fi
 
 #run memtester test
 echo "**********************DDR MEMTESTER TEST****************************"
