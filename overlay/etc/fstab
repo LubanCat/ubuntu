@@ -10,4 +10,4 @@ debug				/sys/kernel/debug	debugfs		defaults		0	0
 pstore				/sys/fs/pstore		pstore		defaults		0	0
 # PARTLABEL=oem	/oem	ext2	defaults	0 2
 # PARTLABEL=userdata	/userdata	ext2	defaults	0 2
-PARTLABEL=boot	/boot	vfat	defaults	0 2
+PARTLABEL=boot	/boot	auto	defaults	0 2
