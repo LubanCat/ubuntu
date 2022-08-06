@@ -108,8 +108,27 @@ systemctl mask NetworkManager-wait-online.service
 rm /lib/systemd/system/wpa_supplicant@.service
 
 #---------------Clean--------------
+if [ -e "/usr/lib/arm-linux-gnueabihf/dri" ] ;
+then
+        cd /usr/lib/arm-linux-gnueabihf/dri/
+        cp kms_swrast_dri.so swrast_dri.so /
+        rm /usr/lib/arm-linux-gnueabihf/dri/*.so
+        mv /*.so /usr/lib/arm-linux-gnueabihf/dri/
+elif [ -e "/usr/lib/aarch64-linux-gnu/dri" ];
+then
+        cd /usr/lib/aarch64-linux-gnu/dri/
+        cp kms_swrast_dri.so swrast_dri.so /
+        rm /usr/lib/aarch64-linux-gnu/dri/*.so
+        mv /*.so /usr/lib/aarch64-linux-gnu/dri/
+        rm /etc/profile.d/qt.sh
+fi
+cd -
+
+#---------------Clean--------------
 echo -e "\033[36m  Clean Packages or Cache .................... \033[0m"
 rm -rf /var/lib/apt/lists/*
+rm -rf /var/cache/
+rm -rf /packages/
 
 EOF
 
