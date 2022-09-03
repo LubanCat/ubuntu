@@ -86,7 +86,8 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez*
+\apt-get remove -y gnome-bluetooth
+\${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez* blueman
 
 # #---------------power management --------------
 # \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
