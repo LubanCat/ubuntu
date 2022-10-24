@@ -73,13 +73,34 @@ board_id
 board_info ${BOARD_ID}
 
 # first boot configure
+
+until [ -e "/dev/disk/by-partlabel/boot" ]
+do
+    echo "wait /dev/disk/by-partlabel/boot"
+    sleep 0.1
+done
+
 if [ ! -e "/boot/boot_init" ] ;
 then
-    
-    ln -sf dtb/$BOARD_DTB /boot/rk-kernel.dtb
-    cp -rf /boot/lib/modules/ /lib/modules
-    touch /boot/boot_init
 
-    reboot
+    if [ ! -e "/dev/disk/by-partlabel/userdata" ] ;
+    then
+
+        if [ ! -e "/boot/rk-kernel.dtb" ] ; then
+            mount /dev/disk/by-partlabel/boot /boot
+            echo "PARTLABEL=boot  /boot  auto  defaults  0 2" >> /etc/fstab
+        fi	
+
+        apt install -fy --allow-downgrades /boot/kerneldeb/*
+        # rm -f /boot/kerneldeb/*
+        ln -sf dtb/$BOARD_DTB /boot/rk-kernel.dtb
+    
+        touch /boot/boot_init
+        reboot
+    else
+        echo "PARTLABEL=oem  /oem  ext2  defaults  0 2" >> /etc/fstab
+        echo "PARTLABEL=userdata  /userdata  ext2  defaults  0 2" >> /etc/fstab
+        touch /boot/boot_init
+    fi
 fi
 
