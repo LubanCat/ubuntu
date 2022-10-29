@@ -1,0 +1,6 @@
+Ubuntu 22.04.1 LTS GNU/Linux \n \l
+
+[username:password] root:root cat:temppwd
+
+Modify information : /etc/issue
+

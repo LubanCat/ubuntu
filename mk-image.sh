@@ -2,7 +2,7 @@
 
 TARGET_ROOTFS_DIR=./binary
 MOUNTPOINT=./rootfs
-ROOTFSIMAGE=ubuntu-jammy.img
+ROOTFSIMAGE=ubuntu-rootfs.img
 
 echo Making rootfs!
 

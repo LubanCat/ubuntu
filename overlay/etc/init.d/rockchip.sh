@@ -1,45 +1,65 @@
 #!/bin/bash -e
 ### BEGIN INIT INFO
 # Provides:          rockchip
-# Required-Start:  
-# Required-Stop: 
+# Required-Start:
+# Required-Stop:
 # Default-Start:
 # Default-Stop:
-# Short-Description: 
+# Short-Description:
 # Description:       Setup rockchip platform environment
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-install_mali() {
+install_packages() {
     case $1 in
         rk3288)
-            MALI=midgard-t76x-r18p0-r0p0
-
-            # 3288w
-            cat /sys/devices/platform/*gpu/gpuinfo | grep -q r1p0 && \
-                MALI=midgard-t76x-r18p0-r1p0
-            ;;
+		MALI=midgard-t76x-r18p0-r0p0
+		ISP=rkisp
+		RGA=rga
+		# 3288w
+		cat /sys/devices/platform/*gpu/gpuinfo | grep -q r1p0 && \
+		MALI=midgard-t76x-r18p0-r1p0
+		;;
         rk3399|rk3399pro)
-            MALI=midgard-t86x-r18p0
-            ;;
+		MALI=midgard-t86x-r18p0
+		ISP=rkisp
+		RGA=rga
+		;;
         rk3328)
-            MALI=utgard-450
-            ;;
+		MALI=utgard-450
+		ISP=rkisp
+		RGA=rga
+        ;;
         rk3326|px30)
-            MALI=bifrost-g31-g2p0
-            ;;
+		MALI=bifrost-g31-g2p0
+		ISP=rkisp
+		RGA=rga
+		;;
         rk3128|rk3036)
-            MALI=utgard-400
-            ;;
+		MALI=utgard-400
+		ISP=rkisp
+		RGA=rga
+		;;
         rk3568|rk3566)
-            MALI=bifrost-g52-g2p0
-            ;;
+		MALI=bifrost-g52-g2p0
+		ISP=rkaiq_rk3568
+		RGA=rga
+		;;
         rk3588|rk3588s)
-            MALI=valhall-g610-g6p0
-            ;;
+		ISP=rkaiq_rk3588
+		MALI=valhall-g610-g6p0
+		RGA=rga2
+		;;
     esac
 
-    apt install -f /packages/libmali/libmali-*$MALI*-x11*.deb
+    if [ -e /libmali-*$MALI*-x11*.deb ]; then
+        apt install -fy --allow-downgrades /libmali-*$MALI*-x11*.deb
+        apt install -fy --allow-downgrades /camera_engine_$ISP*.deb
+        apt install -fy --allow-downgrades /$RGA/*.deb
+
+    else
+        echo "No libmali-*$MALI*-x11*.deb, skip!"
+    fi    
 }
 
 
@@ -78,6 +98,8 @@ fi
 COMPATIBLE=${COMPATIBLE#rockchip,}
 BOARDNAME=${COMPATIBLE%%rockchip,*}
 
+/etc/init.d/boot_init.sh
+
 # first boot configure
 if [ ! -e "/usr/local/first_boot_flag" ] ;
 then
@@ -87,24 +109,28 @@ then
     # Force rootfs synced
     mount -o remount,sync /
 
-    install_mali ${CHIPNAME}
-    setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
+    install_packages ${CHIPNAME}
 
-    # Cannot open pixbuf loader module file
-    if [ -e "/usr/lib/arm-linux-gnueabihf" ] ;
-    then
-       /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
-       update-mime-database /usr/share/mime/
-    elif [ -e "/usr/lib/aarch64-linux-gnu" ];
-    then
-       /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+    rm -rf /rga*
+    rm -rf /*.deb
+
+    if [ -e /usr/bin/gst-launch-1.0 ]; then
+        setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0 
+
+        # Cannot open pixbuf loader module file
+        if [ -e "/usr/lib/arm-linux-gnueabihf" ] ;
+        then
+        /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        update-mime-database /usr/share/mime/
+        elif [ -e "/usr/lib/aarch64-linux-gnu" ];
+        then
+        /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        fi
+
+        rm -rf /packages
+        # The base target does not come with lightdm
+        systemctl restart lightdm.service || true
     fi
-
-    rm -rf /packages
-
-    # The base target does not come with gdm3
-    systemctl restart gdm3.service || true
-
     touch /usr/local/first_boot_flag
 fi
 

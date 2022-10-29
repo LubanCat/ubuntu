@@ -1,6 +1,6 @@
 [Unit]
 Description=enable ASYNC for Ubuntu Display
-Before=gdm3.service
+Before=lightdm.service
 
 [Service]
 Type=forking
