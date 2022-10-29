@@ -1,13 +1,8 @@
 #!/bin/bash
 
 DDR_DIR=/rockchip-test/ddr
-RESULT_DIR=/data/cfg/rockchip-test
+RESULT_DIR=/rockchip-test/ddr
 RESULT_LOG=${RESULT_DIR}/stressapptest.log
-
-if [ ! -e "/data/cfg/rockchip-test" ]; then
-	echo "no /data/cfg/rockchip-test"
-	mkdir -p /data/cfg/rockchip-test
-fi
 
 #run stressapptest_test
 echo "**********************DDR STRESSAPPTEST TEST 48H*************************"

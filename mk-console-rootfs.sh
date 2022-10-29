@@ -56,12 +56,6 @@ elif [[ "$ARCH" == "arm64" && "$VERSION" == "debug" ]]; then
 	sudo cp -f overlay-debug/usr/local/share/adb/adbd-64 $TARGET_ROOTFS_DIR/usr/bin/adbd
 fi
 
-# bt/wifi firmware
-sudo mkdir -p $TARGET_ROOTFS_DIR/system/lib/modules/
-sudo mkdir -p $TARGET_ROOTFS_DIR/vendor/etc
-sudo find ../kernel/drivers/net/wireless/rockchip_wlan/*  -name "*.ko" | \
-    xargs -n1 -i sudo cp {} $TARGET_ROOTFS_DIR/system/lib/modules/
-
 echo -e "\033[36m Change root.....................\033[0m"
 if [ "$ARCH" == "armhf" ]; then
 	sudo cp /usr/bin/qemu-arm-static $TARGET_ROOTFS_DIR/usr/bin/
@@ -85,7 +79,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} toilet htop pciutils gdisk parted
+\${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez*
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
@@ -103,8 +97,27 @@ systemctl mask NetworkManager-wait-online.service
 rm /lib/systemd/system/wpa_supplicant@.service
 
 #---------------Clean--------------
+if [ -e "/usr/lib/arm-linux-gnueabihf/dri" ] ;
+then
+        cd /usr/lib/arm-linux-gnueabihf/dri/
+        cp kms_swrast_dri.so swrast_dri.so /
+        rm /usr/lib/arm-linux-gnueabihf/dri/*.so
+        mv /*.so /usr/lib/arm-linux-gnueabihf/dri/
+elif [ -e "/usr/lib/aarch64-linux-gnu/dri" ];
+then
+        cd /usr/lib/aarch64-linux-gnu/dri/
+        cp kms_swrast_dri.so swrast_dri.so /
+        rm /usr/lib/aarch64-linux-gnu/dri/*.so
+        mv /*.so /usr/lib/aarch64-linux-gnu/dri/
+        rm /etc/profile.d/qt.sh
+fi
+cd -
+
+#---------------Clean--------------
 echo -e "\033[36m  Clean Packages or Cache .................... \033[0m"
 rm -rf /var/lib/apt/lists/*
+rm -rf /var/cache/
+rm -rf /packages/
 
 EOF
 

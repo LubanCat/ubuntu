@@ -56,12 +56,6 @@ elif [[ "$ARCH" == "arm64" && "$VERSION" == "debug" ]]; then
 	sudo cp -f overlay-debug/usr/local/share/adb/adbd-64 $TARGET_ROOTFS_DIR/usr/bin/adbd
 fi
 
-# bt/wifi firmware
-sudo mkdir -p $TARGET_ROOTFS_DIR/system/lib/modules/
-sudo mkdir -p $TARGET_ROOTFS_DIR/vendor/etc
-sudo find ../kernel/drivers/net/wireless/rockchip_wlan/*  -name "*.ko" | \
-    xargs -n1 -i sudo cp {} $TARGET_ROOTFS_DIR/system/lib/modules/
-
 echo -e "\033[36m Change root.....................\033[0m"
 if [ "$ARCH" == "armhf" ]; then
 	sudo cp /usr/bin/qemu-arm-static $TARGET_ROOTFS_DIR/usr/bin/
@@ -85,7 +79,14 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} toilet htop pciutils gdisk parted
+\apt-get remove -y gnome-bluetooth
+\${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez* blueman hardinfo
+
+systemctl disable apt-daily.service
+systemctl disable apt-daily.timer
+
+systemctl disable apt-daily-upgrade.timer
+systemctl disable apt-daily-upgrade.service
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
@@ -95,7 +96,10 @@ echo -e "\033[36m Setup Video.................... \033[0m"
 
 \${APT_INSTALL} /packages/mpp/*
 \${APT_INSTALL} /packages/gst-rkmpp/*.deb
-apt-mark hold gstreamer1.0-x
+\${APT_INSTALL} /packages/gstreamer/*.deb
+\${APT_INSTALL} /packages/gst-plugins-base1.0/*.deb
+\${APT_INSTALL} /packages/gst-plugins-bad1.0/*.deb
+\${APT_INSTALL} /packages/gst-plugins-good1.0/*.deb
 
 #---------Camera---------
 echo -e "\033[36m Install camera.................... \033[0m"
@@ -138,14 +142,39 @@ apt-mark hold libegl-mesa0 libgbm1 libgles1 alsa-utils
 # HACK to disable the kernel logo on bootup
 sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
 
+cp /packages/libmali/libmali-*-x11*.deb /
+cp -rf /packages/rga/ /
+cp -rf /packages/rga2/ /
+cp -rf /packages/rkisp/*.deb /
+cp -rf /packages/rkaiq/*.deb /
+
 #---------------Custom Script--------------
 systemctl mask systemd-networkd-wait-online.service
 systemctl mask NetworkManager-wait-online.service
 rm /lib/systemd/system/wpa_supplicant@.service
 
 #---------------Clean--------------
+if [ -e "/usr/lib/arm-linux-gnueabihf/dri" ] ;
+then
+        cd /usr/lib/arm-linux-gnueabihf/dri/
+        cp kms_swrast_dri.so swrast_dri.so /
+        rm /usr/lib/arm-linux-gnueabihf/dri/*.so
+        mv /*.so /usr/lib/arm-linux-gnueabihf/dri/
+elif [ -e "/usr/lib/aarch64-linux-gnu/dri" ];
+then
+        cd /usr/lib/aarch64-linux-gnu/dri/
+        cp kms_swrast_dri.so swrast_dri.so /
+        rm /usr/lib/aarch64-linux-gnu/dri/*.so
+        mv /*.so /usr/lib/aarch64-linux-gnu/dri/
+        rm /etc/profile.d/qt.sh
+fi
+cd -
+
+#---------------Clean--------------
 echo -e "\033[36m  Clean Packages or Cache .................... \033[0m"
 rm -rf /var/lib/apt/lists/*
+rm -rf /var/cache/
+rm -rf /packages/
 
 EOF
 

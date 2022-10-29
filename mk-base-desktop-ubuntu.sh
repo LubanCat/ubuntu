@@ -8,7 +8,6 @@ else
     echo -e "[ please input the os type,armhf or arm64...... ]"
 fi
 
-VERSION="debug"
 TARGET_ROOTFS_DIR="binary"
 
 sudo rm -rf binary/
@@ -50,7 +49,7 @@ apt-get -y update
 apt-get -f -y upgrade
 
 DEBIAN_FRONTEND=noninteractive apt install -y sudo ntp apt-utils \
-  	evtest lightdm xubuntu-core onboard bluez
+  	evtest lightdm xubuntu-core onboard bluez ntp udev
 
 apt install -y rsyslog network-manager net-tools inetutils-ping \
     openssh-server libssl-dev vsftpd tcpdump i2c-tools udev netplan.io \

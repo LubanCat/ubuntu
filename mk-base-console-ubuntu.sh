@@ -44,6 +44,9 @@ echo "[ Change root.....................]"
 
 cat <<EOF | sudo chroot $TARGET_ROOTFS_DIR/
 
+echo "export LC_ALL=C" >> ~/.bashrc
+source ~/.bashrc
+
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 apt-get -y update
@@ -79,6 +82,12 @@ echo lubancat > /etc/hostname
 
 # set localtime
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# workaround 90s delay
+services=(NetworkManager systemd-networkd)
+for service in ${services[@]}; do
+  systemctl mask ${service}-wait-online.service
+done
 
 # disbale the wire/nl80211
 systemctl mask wpa_supplicant-wired@

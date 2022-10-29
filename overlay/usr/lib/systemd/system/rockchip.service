@@ -2,6 +2,7 @@
 [Unit]
 Description=Setup rockchip platform environment
 Before=lightdm.service
+After=dev-disk-by\x2dlabel-boot.device
 After=resize-helper.service
 
 [Service]
