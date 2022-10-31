@@ -52,9 +52,14 @@ install_packages() {
 		;;
     esac
 
-    apt install -fy --allow-downgrades /libmali-*$MALI*-x11*.deb
-    apt install -fy --allow-downgrades /camera_engine_$ISP*.deb
-    apt install -fy --allow-downgrades /$RGA/*.deb
+    if [ -e /libmali-*$MALI*-x11*.deb ]; then
+        apt install -fy --allow-downgrades /libmali-*$MALI*-x11*.deb
+        apt install -fy --allow-downgrades /camera_engine_$ISP*.deb
+        apt install -fy --allow-downgrades /$RGA/*.deb
+
+    else
+        echo "No libmali-*$MALI*-x11*.deb, skip!"
+    fi    
 }
 
 
@@ -105,26 +110,27 @@ then
     mount -o remount,sync /
 
     install_packages ${CHIPNAME}
-    setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
 
     rm -rf /rga*
     rm -rf /*.deb
 
-    # Cannot open pixbuf loader module file
-    if [ -e "/usr/lib/arm-linux-gnueabihf" ] ;
-    then
-       /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
-       update-mime-database /usr/share/mime/
-    elif [ -e "/usr/lib/aarch64-linux-gnu" ];
-    then
-       /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+    if [ -e /usr/bin/gst-launch-1.0 ]; then
+        setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0 
+
+        # Cannot open pixbuf loader module file
+        if [ -e "/usr/lib/arm-linux-gnueabihf" ] ;
+        then
+        /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        update-mime-database /usr/share/mime/
+        elif [ -e "/usr/lib/aarch64-linux-gnu" ];
+        then
+        /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        fi
+
+        rm -rf /packages
+        # The base target does not come with lightdm
+        systemctl restart lightdm.service || true
     fi
-
-    rm -rf /packages
-
-    # The base target does not come with lightdm
-    systemctl restart lightdm.service || true
-
     touch /usr/local/first_boot_flag
 fi
 
