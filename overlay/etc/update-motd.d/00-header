@@ -4,13 +4,28 @@
 [ -r /etc/lsb-release ] && . /etc/lsb-release
 
 printf "\n"
-echo "
+echo "\e[1;34m 
+           OO                            OO
+           OOOO                        OOOO
+           OOOOO                     OOOOOO
+           OOOOOOO                 .OOOOOOO
+           OOOOOOOOO              OOOOOOOOO
+           OOOOOOOOOOO          OOOOOOOOOOO
+           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+           OOOOO\    OOOOOOOOOOOO    /OOOOO
+           OOOOOOOOO    OOOOOO     OOOOOOOO
+           OOOOO/    OOOOOOOOOOOOO   \OOOOO
+           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+           OOOOOOOOOOOOOO\￣/OOOOOOOOOOOOOO
+           OOOOOOOOOOOOOOO\/OOOOOOOOOOOOOOO
+           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 
   _            _                     ____        _
- | |    _   _ | |__    ____  _____  / ___| ____ | |_
+ | |    _   _ | |__    ____  _____  / ___| ____ | |_   
  | |   | | | || '_ \  / _  ||  _  || |    / _  || __|
  | |___| |_| || |_) || (_| || | | || |___| (_| || |_
- |_____|\__._||_.__/  \__'_||_| |_| \____|\__'_| \__|
-" | TERM=linux toilet -f term -F gay
+ |_____|\__._||_.__/  \__'_||_| |_| \____|\__'_| \__| 
+\e[0m"
 
 if [ -z "$DISTRIB_DESCRIPTION" ] && [ -x /usr/bin/lsb_release ]; then
 	# Fall back to using the very slow lsb_release utility
