@@ -3,8 +3,6 @@
 
 [ -r /etc/lsb-release ] && . /etc/lsb-release
 
-echo -e "\e[1;31m 显示的内容 \e[0m"
-
 printf "\n"
 echo "\e[1;34m 
            OO                            OO
