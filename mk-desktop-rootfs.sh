@@ -83,6 +83,9 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 \apt-get remove -y gnome-bluetooth
 \${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez* blueman
 
+#Desktop background picture
+ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
+
 # #---------------power management --------------
 # \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
 # cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
