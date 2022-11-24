@@ -125,7 +125,7 @@ EOF
 
 ./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
-sudo tar zcf ubuntu-base-console-$ARCH.tar.gz $TARGET_ROOTFS_DIR
+sudo tar zcf ubuntu-base-lite-$ARCH.tar.gz $TARGET_ROOTFS_DIR
 
 # sudo rm $TARGET_ROOTFS_DIR -r
 

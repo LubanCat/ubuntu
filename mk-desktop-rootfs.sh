@@ -86,9 +86,9 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 #Desktop background picture
 ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
 
-# #---------------power management --------------
-# \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
-# cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
+#---------------power management --------------
+\${APT_INSTALL} pm-utils triggerhappy bsdmainutils
+cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
@@ -115,8 +115,8 @@ echo -e "\033[36m Install Xserver.................... \033[0m"
 
 apt-mark hold xserver-common xserver-xorg-core xserver-xorg-legacy
 
-# #---------update chromium-----
-# \${APT_INSTALL} /packages/chromium/*.deb
+#---------update chromium-----
+\${APT_INSTALL} /packages/chromium/*.deb
 
 #------------------libdrm------------
 echo -e "\033[36m Install libdrm.................... \033[0m"

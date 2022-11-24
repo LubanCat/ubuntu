@@ -18,7 +18,7 @@ if [ ! $VERSION ]; then
 	VERSION="release"
 fi
 
-if [ ! -e ubuntu-base-console-$ARCH.tar.gz ]; then
+if [ ! -e ubuntu-base-lite-$ARCH.tar.gz ]; then
 	echo "\033[36m Run mk-base-ubuntu.sh first \033[0m"
 	exit -1
 fi
@@ -31,7 +31,7 @@ trap finish ERR
 
 echo -e "\033[36m Extract image \033[0m"
 sudo rm -rf $TARGET_ROOTFS_DIR
-sudo tar -xpf ubuntu-base-console-$ARCH.tar.gz
+sudo tar -xpf ubuntu-base-lite-$ARCH.tar.gz
 
 # packages folder
 sudo mkdir -p $TARGET_ROOTFS_DIR/packages
@@ -100,6 +100,8 @@ sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
 systemctl mask systemd-networkd-wait-online.service
 systemctl mask NetworkManager-wait-online.service
 rm /lib/systemd/system/wpa_supplicant@.service
+
+ln -sf /run/resolvconf/resolv.conf /etc/resolv.conf
 
 #---------------Clean--------------
 if [ -e "/usr/lib/arm-linux-gnueabihf/dri" ] ;
