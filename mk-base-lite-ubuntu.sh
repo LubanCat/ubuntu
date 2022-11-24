@@ -121,8 +121,8 @@ EOF
 
 sudo umount $TARGET_ROOTFS_DIR/dev
 
-echo -e "[ Run tar pack ubuntu-base-desktop-$ARCH.tar.gz ]"
-sudo tar zcf ubuntu-base-desktop-$ARCH.tar.gz $TARGET_ROOTFS_DIR
+echo -e "[ Run tar pack ubuntu-base-lite-$ARCH.tar.gz ]"
+sudo tar zcf ubuntu-base-lite-$ARCH.tar.gz $TARGET_ROOTFS_DIR
 
 # sudo rm $TARGET_ROOTFS_DIR -r
 
