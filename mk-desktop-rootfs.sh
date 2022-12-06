@@ -86,6 +86,9 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 #Desktop background picture
 ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
 
+echo "deb [arch=arm64] https://cloud.embedfire.com/mirrors/ebf-debian carp-rk356x main" | sudo tee -a /etc/apt/sources.list
+curl https://Embedfire.github.io/keyfile | sudo apt-key add -
+
 #---------------power management --------------
 \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
 cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service

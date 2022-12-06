@@ -52,8 +52,8 @@ install_packages() {
 		;;
     esac
 
-    Files=$(ls /libmali-*$MALI*-x11*.deb >/dev/null 2>&1 |grep dbgsym)
-    if [ -n  'ls $Files >/dev/null 2>&1' ]; then
+    Files=$(find / -maxdepth 1 -name "libmali-$MALI-x11-dbgsym*.deb")
+    if [ $Files ]; then
         echo "install libmali-*$MALI*-x11*.deb, wait!"
         apt install -fy --allow-downgrades /libmali-*$MALI*-x11*.deb
         apt install -fy --allow-downgrades /camera_engine_$ISP*.deb
