@@ -52,13 +52,16 @@ install_packages() {
 		;;
     esac
 
-    if [ ! -e /libmali-*$MALI*-x11*.deb ]; then
-        echo "No libmali-*$MALI*-x11*.deb ."
-    else
+    Files=$(find / -maxdepth 1 -name "libmali-$MALI-x11-dbgsym*.deb")
+    if [ $Files ]; then
+        echo "install libmali-*$MALI*-x11*.deb, wait!"
         apt install -fy --allow-downgrades /libmali-*$MALI*-x11*.deb
         apt install -fy --allow-downgrades /camera_engine_$ISP*.deb
         apt install -fy --allow-downgrades /$RGA/*.deb
-    fi    
+        echo "install libmali-*$MALI*-x11*.deb, successful!"
+    else
+        echo "No libmali-*$MALI*-x11*.deb, skip!"
+    fi 
 }
 
 
