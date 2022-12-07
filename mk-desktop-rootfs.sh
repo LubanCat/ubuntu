@@ -71,6 +71,9 @@ sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
 
 cat << EOF | sudo chroot $TARGET_ROOTFS_DIR
 
+echo "deb [arch=arm64] https://cloud.embedfire.com/mirrors/ebf-debian carp-rk356x main" | sudo tee -a /etc/apt/sources.list
+curl https://Embedfire.github.io/keyfile | sudo apt-key add -
+
 apt-get update
 apt-get upgrade -y
 
@@ -81,13 +84,10 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
 \apt-get remove -y gnome-bluetooth
-\${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez* blueman
+\${APT_INSTALL} gdisk parted bluez* blueman fire-config
 
 #Desktop background picture
 ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
-
-echo "deb [arch=arm64] https://cloud.embedfire.com/mirrors/ebf-debian carp-rk356x main" | sudo tee -a /etc/apt/sources.list
-curl https://Embedfire.github.io/keyfile | sudo apt-key add -
 
 #---------------power management --------------
 \${APT_INSTALL} pm-utils triggerhappy bsdmainutils

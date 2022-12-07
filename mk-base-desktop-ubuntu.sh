@@ -64,7 +64,9 @@ mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 
 apt install -y net-tools openssh-server ifupdown alsa-utils ntp network-manager \
 gdb inetutils-ping python libssl-dev vsftpd tcpdump can-utils i2c-tools strace  \
-vim iperf3 ethtool netplan.io acpid
+vim iperf3 ethtool netplan.io acpid toilet htop pciutils usbutils whiptail curl gnupg
+
+\${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
 HOST=lubancat
 
