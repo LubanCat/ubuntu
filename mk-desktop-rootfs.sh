@@ -81,7 +81,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
 \apt-get remove -y gnome-bluetooth
-\${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez* blueman
+\${APT_INSTALL} gdisk parted bluez* blueman
 
 # #---------------power management --------------
 # \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
