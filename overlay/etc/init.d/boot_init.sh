@@ -23,11 +23,12 @@ board_info() {
             BOARD_NAME='LubanCat2'
             BOARD_DTB='rk3568-lubancat2.dtb'
             ;;
-        0500)
+        0500 |\
+        0600)
             BOARD_NAME='LubanCat2N'
             BOARD_DTB='rk3568-lubancat2-n.dtb'
             ;;
-        0600)
+        0700)
             BOARD_NAME='LubanCat2IO'
             BOARD_DTB='rk3568-lubancat2-io.dtb'
             ;;

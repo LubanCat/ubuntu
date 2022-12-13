@@ -80,7 +80,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
 \apt-get remove -y gnome-bluetooth
-\${APT_INSTALL} toilet htop pciutils gdisk parted usbutils bluez* blueman hardinfo
+\${APT_INSTALL} gdisk parted bluez* blueman
 
 systemctl disable apt-daily.service
 systemctl disable apt-daily.timer

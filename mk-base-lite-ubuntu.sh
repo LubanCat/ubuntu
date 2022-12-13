@@ -57,7 +57,10 @@ DEBIAN_FRONTEND=noninteractive apt install -y sudo ntp apt-utils evtest
 apt install -y rsyslog network-manager net-tools inetutils-ping \
     openssh-server libssl-dev vsftpd tcpdump i2c-tools udev netplan.io \
     bash-completion alsa-utils usbutils pciutils toilet bsdmainutils \
-    vim iperf3 ethtool toilet htop pciutils
+    vim iperf3 ethtool toilet htop pciutils toilet htop pciutils usbutils \
+    whiptail curl gnupg hardinfo
+
+\${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
 HOST=lubancat
 
