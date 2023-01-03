@@ -3,6 +3,35 @@
 # Directory contains the target rootfs
 TARGET_ROOTFS_DIR="binary"
 
+if [ ! $SOC ]; then
+	SOC="rk3568"
+fi
+
+install_packages() {
+    case $SOC in
+        rk3399|rk3399pro)
+		MALI=midgard-t86x-r18p0
+		ISP=rkisp
+		RGA=rga
+		;;
+        rk3328)
+		MALI=utgard-450
+		ISP=rkisp
+		RGA=rga
+		;;
+        rk356x|rk3566|rk3568)
+		MALI=bifrost-g52-g2p0
+		ISP=rkaiq_rk3568
+		RGA=rga
+		;;
+        rk3588|rk3588s)
+		ISP=rkaiq_rk3588
+		MALI=valhall-g610-g6p0
+		RGA=rga2
+		;;
+    esac
+}
+
 case "${ARCH:-$1}" in
 	arm|arm32|armhf)
 		ARCH=armhf
@@ -36,6 +65,13 @@ sudo tar -xpf ubuntu-base-desktop-$ARCH.tar.gz
 # packages folder
 sudo mkdir -p $TARGET_ROOTFS_DIR/packages
 sudo cp -rpf packages/$ARCH/* $TARGET_ROOTFS_DIR/packages
+
+#GPU/RGA/CAMERA packages folder
+install_packages
+sudo mkdir -p $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/libmali/libmali-*$MALI*-x11*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/camera_engine/camera_engine_$ISP*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/$RGA/*.deb $TARGET_ROOTFS_DIR/packages/install_packages
 
 # overlay folder
 sudo cp -rpf overlay/* $TARGET_ROOTFS_DIR/
@@ -192,11 +228,7 @@ echo -e "\033[36m Install mpv .................... \033[0m"
 # HACK to disable the kernel logo on bootup
 sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
 
-cp /packages/libmali/libmali-*-x11*.deb /
-cp -rf /packages/rga/ /
-cp -rf /packages/rga2/ /
-cp -rf /packages/rkisp/*.deb /
-cp -rf /packages/rkaiq/*.deb /
+apt install -fy --allow-downgrades /packages/install_packages/*.deb
 
 #---------------Custom Script--------------
 systemctl mask systemd-networkd-wait-online.service
