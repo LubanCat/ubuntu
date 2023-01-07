@@ -71,6 +71,11 @@ sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
 
 cat << EOF | sudo chroot $TARGET_ROOTFS_DIR
 
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://Embedfire.github.io/keyfile | gpg --dearmor -o /etc/apt/keyrings/embedfire.gpg
+chmod a+r /etc/apt/keyrings/embedfire.gpg
+echo "deb [arch=arm64 signed-by=/etc/apt/keyrings/embedfire.gpg] https://cloud.embedfire.com/mirrors/ebf-debian carp-rk356x main" | tee /etc/apt/sources.list.d/embedfire.list > /dev/null
+
 apt-get update
 apt-get upgrade -y
 
@@ -80,15 +85,21 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} gdisk parted bluez*
+\${APT_INSTALL} gdisk parted bluez* fire-config
 
 # #---------------power management --------------
 # \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
 # cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
 
+#---------------Rga--------------
+\${APT_INSTALL} /packages/rga/*.deb
+
 #------------------libdrm------------
 echo -e "\033[36m Install libdrm.................... \033[0m"
 \${APT_INSTALL} /packages/libdrm/*.deb
+
+# HACK to disable the kernel logo on bootup
+sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
 
 #---------------Custom Script--------------
 systemctl mask systemd-networkd-wait-online.service

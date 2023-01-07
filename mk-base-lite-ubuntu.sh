@@ -33,28 +33,27 @@ if [ ! -d $TARGET_ROOTFS_DIR ] ; then
 fi
 
 finish() {
-	sudo umount $TARGET_ROOTFS_DIR/dev
-	exit -1
+    ./ch-mount.sh -u $TARGET_ROOTFS_DIR
+    echo -e "error exit"
+    exit -1
 }
 trap finish ERR
 
-sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
+echo "[ Change root.....................]"
+
+./ch-mount.sh -m $TARGET_ROOTFS_DIR
 
 cat <<EOF | sudo chroot $TARGET_ROOTFS_DIR/
-
-echo "export LC_ALL=C" >> ~/.bashrc
-source ~/.bashrc
 
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 apt-get -y update
 apt-get -f -y upgrade
 
-DEBIAN_FRONTEND=noninteractive apt install -y rsyslog sudo dialog apt-utils ntp evtest onboard udev
-apt install -y net-tools openssh-server ifupdown alsa-utils ntp network-manager \
-gdb inetutils-ping python3 libssl-dev vsftpd tcpdump can-utils i2c-tools strace  \
-vim iperf3 ethtool netplan.io acpid  toilet htop pciutils usbutils \
-whiptail curl gnupg
+DEBIAN_FRONTEND=noninteractive apt install -y rsyslog sudo dialog apt-utils ntp evtest acpid
+\${APT_INSTALL} net-tools openssh-server ifupdown alsa-utils ntp network-manager 
+\${APT_INSTALL} gdb inetutils-ping libssl-dev vsftpd tcpdump can-utils i2c-tools strace  
+\${APT_INSTALL} vim iperf3 ethtool netplan.io toilet htop pciutils usbutils whiptail curl gnupg
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
@@ -114,14 +113,17 @@ fi
 # just blow the %sudo line away and force it to be NOPASSWD
 sed -i -e '
 /\%sudo/ c \
-%sudo	ALL=(ALL) NOPASSWD: ALL
+%sudo    ALL=(ALL) NOPASSWD: ALL
 ' /etc/sudoers
+
+apt-get clean
+rm -rf /var/lib/apt/lists/*
 
 sync
 
 EOF
 
-sudo umount $TARGET_ROOTFS_DIR/dev
+./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
 echo -e "[ Run tar pack ubuntu-base-lite-$ARCH.tar.gz ]"
 sudo tar zcf ubuntu-base-lite-$ARCH.tar.gz $TARGET_ROOTFS_DIR

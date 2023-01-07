@@ -5,10 +5,9 @@ if [ "$ARCH" == "armhf" ]; then
 elif [ "$ARCH" == "arm64" ]; then
 	ARCH='arm64'
 else
-    echo -e "\033[36m please input the os type,armhf or arm64...... \033[0m"
+    echo -e "[ please input the os type,armhf or arm64...... ]"
 fi
 
-VERSION="debug"
 TARGET_ROOTFS_DIR="binary"
 
 sudo rm -rf binary/
@@ -42,27 +41,28 @@ sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
 
 cat <<EOF | sudo chroot $TARGET_ROOTFS_DIR/
 
-echo "export LC_ALL=C" >> ~/.bashrc
-source ~/.bashrc
-
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 apt-get -y update
 apt-get -f -y upgrade
 
 ##############   gnome  ###############
-# DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop-minimal 
+# DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop-minimal rsyslog sudo dialog apt-utils ntp evtest onboard
 
 ##############   xfce4  ###############
-DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core 
+DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core onboard rsyslog sudo dialog apt-utils ntp evtest udev
+mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/
+mkdir /var/lib/dpkg/info/
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core onboard rsyslog sudo dialog apt-utils ntp evtest udev
+mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 
 # apt install -y language-pack-zh-han* language-pack-en $(check-language-support) ibus-libpinyin language-pack-gnome-zh-hans gnome-getting-started-docs-zh-hk
 
-apt install -y rsyslog sudo dialog apt-utils ntp evtest onboard udev
-apt install -y net-tools openssh-server ifupdown alsa-utils ntp network-manager \
-gdb inetutils-ping libssl-dev vsftpd tcpdump can-utils i2c-tools strace  \
-vim iperf3 ethtool netplan.io acpid  toilet htop pciutils usbutils \
-whiptail curl gnupg
+\${APT_INSTALL} net-tools openssh-server ifupdown alsa-utils ntp network-manager
+\${APT_INSTALL} gdb inetutils-ping libssl-dev vsftpd tcpdump can-utils i2c-tools strace 
+\${APT_INSTALL} vim iperf3 ethtool netplan.io acpid toilet htop pciutils usbutils 
+\${APT_INSTALL} whiptail curl gnupg
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
@@ -123,8 +123,11 @@ fi
 # just blow the %sudo line away and force it to be NOPASSWD
 sed -i -e '
 /\%sudo/ c \
-%sudo	ALL=(ALL) NOPASSWD: ALL
+%sudo    ALL=(ALL) NOPASSWD: ALL
 ' /etc/sudoers
+
+apt-get clean
+rm -rf /var/lib/apt/lists/*
 
 sync
 

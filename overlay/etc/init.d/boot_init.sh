@@ -92,11 +92,14 @@ then
             echo "PARTLABEL=boot  /boot  auto  defaults  0 2" >> /etc/fstab
         fi	
 
+        service lightdm stop || echo "skip error"
+
         apt install -fy --allow-downgrades /boot/kerneldeb/*
         # rm -f /boot/kerneldeb/*
         ln -sf dtb/$BOARD_DTB /boot/rk-kernel.dtb
     
         touch /boot/boot_init
+        cp -f /boot/logo_kernel.bmp /boot/logo.bmp
         reboot
     else
         echo "PARTLABEL=oem  /oem  ext2  defaults  0 2" >> /etc/fstab
