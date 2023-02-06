@@ -51,11 +51,10 @@ apt-get -f -y upgrade
 DEBIAN_FRONTEND=noninteractive apt install -y sudo ntp apt-utils \
   	evtest lightdm xubuntu-core onboard bluez ntp udev
 
-apt install -y rsyslog network-manager net-tools inetutils-ping \
-    openssh-server libssl-dev vsftpd tcpdump i2c-tools udev netplan.io \
-    bash-completion alsa-utils usbutils pciutils toilet bsdmainutils \
-    vim iperf3 ethtool toilet htop pciutils toilet htop pciutils usbutils \
-    whiptail curl gnupg
+\${APT_INSTALL} rsyslog network-manager net-tools inetutils-ping ifupdown ntp \
+\${APT_INSTALL} openssh-server libssl-dev vsftpd tcpdump i2c-tools udev netplan.io \
+\${APT_INSTALL} bash-completion alsa-utils usbutils pciutils toilet bsdmainutils \
+\${APT_INSTALL} vim iperf3 ethtool htop gdb can-utils strace acpid whiptail curl gnupg\
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
@@ -82,6 +81,12 @@ echo lubancat > /etc/hostname
 
 # set localtime
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# workaround 90s delay
+services=(NetworkManager systemd-networkd)
+for service in ${services[@]}; do
+  systemctl mask ${service}-wait-online.service
+done
 
 # disbale the wire/nl80211
 systemctl mask wpa_supplicant-wired@
@@ -121,8 +126,9 @@ EOF
 
 ./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
+echo -e "[ Run tar pack ubuntu-base-desktop-$ARCH.tar.gz ]"
 sudo tar zcf ubuntu-base-desktop-$ARCH.tar.gz $TARGET_ROOTFS_DIR
 
-sudo rm $TARGET_ROOTFS_DIR -r
+# sudo rm $TARGET_ROOTFS_DIR -r
 
 echo -e "normal exit"

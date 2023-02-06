@@ -5,10 +5,9 @@ if [ "$ARCH" == "armhf" ]; then
 elif [ "$ARCH" == "arm64" ]; then
 	ARCH='arm64'
 else
-    echo -e "[ please input the os type,armhf or arm64...... ]"
+    echo -e "\033[36m please input the os type,armhf or arm64...... \033[0m"
 fi
 
-VERSION="debug"
 TARGET_ROOTFS_DIR="binary"
 
 sudo rm -rf binary/
@@ -44,21 +43,16 @@ echo "[ Change root.....................]"
 
 cat <<EOF | sudo chroot $TARGET_ROOTFS_DIR/
 
-echo "export LC_ALL=C" >> ~/.bashrc
-source ~/.bashrc
-
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 apt-get -y update
 apt-get -f -y upgrade
 
-DEBIAN_FRONTEND=noninteractive apt install -y sudo ntp apt-utils evtest
-	  
-apt install -y rsyslog network-manager net-tools inetutils-ping \
-    openssh-server libssl-dev vsftpd tcpdump i2c-tools udev netplan.io \
-    bash-completion alsa-utils usbutils pciutils toilet bsdmainutils \
-    vim iperf3 ethtool toilet htop pciutils toilet htop pciutils usbutils \
-    whiptail curl gnupg hardinfo
+DEBIAN_FRONTEND=noninteractive apt install -y sudo ntp apt-utils evtest dialog  acpid 
+\${APT_INSTALL} rsyslog network-manager net-tools inetutils-ping ifupdown
+\${APT_INSTALL} openssh-server libssl-dev vsftpd tcpdump i2c-tools udev netplan.io 
+\${APT_INSTALL} bash-completion alsa-utils usbutils pciutils toilet bsdmainutils
+\${APT_INSTALL} vim iperf3 ethtool whiptail curl gnupg hardinfo gdb can-utils strace
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
@@ -130,8 +124,9 @@ EOF
 
 ./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
+echo -e "[ Run tar pack ubuntu-base-lite-$ARCH.tar.gz ]"
 sudo tar zcf ubuntu-base-lite-$ARCH.tar.gz $TARGET_ROOTFS_DIR
 
-sudo rm -rf binary/
+# sudo rm $TARGET_ROOTFS_DIR -r
 
 echo -e "normal exit"

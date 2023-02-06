@@ -3,6 +3,35 @@
 # Directory contains the target rootfs
 TARGET_ROOTFS_DIR="binary"
 
+if [ ! $SOC ]; then
+	SOC="rk3568"
+fi
+
+install_packages() {
+    case $SOC in
+        rk3399|rk3399pro)
+		MALI=midgard-t86x-r18p0
+		ISP=rkisp
+		RGA=rga
+		;;
+        rk3328)
+		MALI=utgard-450
+		ISP=rkisp
+		RGA=rga
+		;;
+        rk356x|rk3566|rk3568)
+		MALI=bifrost-g52-g2p0
+		ISP=rkaiq_rk3568
+		RGA=rga
+		;;
+        rk3588|rk3588s)
+		ISP=rkaiq_rk3588
+		MALI=valhall-g610-g6p0
+		RGA=rga2
+		;;
+    esac
+}
+
 case "${ARCH:-$1}" in
 	arm|arm32|armhf)
 		ARCH=armhf
@@ -37,6 +66,13 @@ sudo tar -xpf ubuntu-base-desktop-$ARCH.tar.gz
 sudo mkdir -p $TARGET_ROOTFS_DIR/packages
 sudo cp -rpf packages/$ARCH/* $TARGET_ROOTFS_DIR/packages
 
+#GPU/RGA/CAMERA packages folder
+install_packages
+sudo mkdir -p $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/libmali/libmali-*$MALI*-x11*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/camera_engine/camera_engine_$ISP*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/$RGA/*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+
 # overlay folder
 sudo cp -rpf overlay/* $TARGET_ROOTFS_DIR/
 
@@ -69,8 +105,12 @@ sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
 
 cat << EOF | sudo chroot $TARGET_ROOTFS_DIR
 
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://Embedfire.github.io/keyfile | gpg --dearmor -o /etc/apt/keyrings/embedfire.gpg
+chmod a+r /etc/apt/keyrings/embedfire.gpg
+echo "deb [arch=arm64 signed-by=/etc/apt/keyrings/embedfire.gpg] https://cloud.embedfire.com/mirrors/ebf-debian carp-rk356x main" | tee /etc/apt/sources.list.d/embedfire.list > /dev/null
+
 apt-get update
-apt-get install -y dpkg-dev
 apt-get upgrade -y
 
 chmod o+x /usr/lib/dbus-1.0/dbus-daemon-launch-helper
@@ -80,13 +120,20 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
 \apt-get remove -y gnome-bluetooth
-\${APT_INSTALL} gdisk parted bluez* blueman
+\${APT_INSTALL} gdisk parted bluez* blueman fire-config
 
 systemctl disable apt-daily.service
 systemctl disable apt-daily.timer
 
 systemctl disable apt-daily-upgrade.timer
 systemctl disable apt-daily-upgrade.service
+
+#Desktop background picture
+ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
+
+#---------------power management --------------
+\${APT_INSTALL} pm-utils triggerhappy bsdmainutils
+cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
@@ -117,15 +164,43 @@ echo -e "\033[36m Install Xserver.................... \033[0m"
 
 apt-mark hold xserver-common xserver-xorg-core xserver-xorg-legacy
 
+#---------update chromium-----
+# \${APT_INSTALL} /packages/chromium/*.deb
+
 #------------------libdrm------------
 echo -e "\033[36m Install libdrm.................... \033[0m"
 \${APT_INSTALL} /packages/libdrm/*.deb
+
+#------------------libdrm-cursor------------
+echo -e "\033[36m Install libdrm-cursor.................... \033[0m"
+\${APT_INSTALL} /packages/libdrm-cursor/*.deb
+
+# Only preload libdrm-cursor for X
+sed -i "/libdrm-cursor.so/d" /etc/ld.so.preload
+sed -i "1aexport LD_PRELOAD=libdrm-cursor.so.1" /usr/bin/X
+
+# #------------------blueman------------
+# echo -e "\033[36m Install blueman.................... \033[0m"
+# #\${APT_INSTALL} /packages/blueman/*.deb
+
+# #------------------rkwifibt------------
+# echo -e "\033[36m Install rkwifibt.................... \033[0m"
+# \${APT_INSTALL} /packages/rkwifibt/*.deb
+# ln -s /system/etc/firmware /vendor/etc/
 
 if [ "$VERSION" == "debug" ]; then
 #------------------glmark2------------
 echo -e "\033[36m Install glmark2.................... \033[0m"
 \${APT_INSTALL} glmark2-es2
 fi
+
+#------------------rknpu2------------
+echo -e "\033[36m Install rknpu2.................... \033[0m"
+tar xvf /packages/rknpu2/*.tar -C /
+
+#------------------rktoolkit------------
+echo -e "\033[36m Install rktoolkit.................... \033[0m"
+\${APT_INSTALL} /packages/rktoolkit/*.deb
 
 #------------------ffmpeg------------
 echo -e "\033[36m Install ffmpeg .................... \033[0m"
@@ -142,11 +217,7 @@ apt-mark hold libegl-mesa0 libgbm1 libgles1 alsa-utils
 # HACK to disable the kernel logo on bootup
 sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
 
-cp /packages/libmali/libmali-*-x11*.deb /
-cp -rf /packages/rga/ /
-cp -rf /packages/rga2/ /
-cp -rf /packages/rkisp/*.deb /
-cp -rf /packages/rkaiq/*.deb /
+apt install -fy --allow-downgrades /packages/install_packages/*.deb
 
 #---------------Custom Script--------------
 systemctl mask systemd-networkd-wait-online.service

@@ -1,3 +1,2 @@
-usb_ums_en
-ums_block=/dev/block/by-name/rootfs
 usb_adb_en
+usb_rndis_en

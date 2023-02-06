@@ -69,8 +69,12 @@ sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
 
 cat << EOF | sudo chroot $TARGET_ROOTFS_DIR
 
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://Embedfire.github.io/keyfile | gpg --dearmor -o /etc/apt/keyrings/embedfire.gpg
+chmod a+r /etc/apt/keyrings/embedfire.gpg
+echo "deb [arch=arm64 signed-by=/etc/apt/keyrings/embedfire.gpg] https://cloud.embedfire.com/mirrors/ebf-debian carp-rk356x main" | tee /etc/apt/sources.list.d/embedfire.list > /dev/null
+
 apt-get update
-apt-get install -y dpkg-dev
 apt-get upgrade -y
 
 chmod o+x /usr/lib/dbus-1.0/dbus-daemon-launch-helper
@@ -79,7 +83,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} gdisk parted bluez*
+\${APT_INSTALL} gdisk parted bluez* fire-config
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
@@ -111,7 +115,6 @@ then
         mv /*.so /usr/lib/aarch64-linux-gnu/dri/
         rm /etc/profile.d/qt.sh
 fi
-cd -
 
 #---------------Clean--------------
 echo -e "\033[36m  Clean Packages or Cache .................... \033[0m"
