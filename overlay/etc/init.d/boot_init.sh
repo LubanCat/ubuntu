@@ -4,33 +4,33 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 board_info() {
     case $1 in
         0000)
-            BOARD_NAME='LubanCat1'
-            BOARD_DTB='rk3566-lubancat1.dtb'
+            BOARD_NAME='LubanCat-1'
+            BOARD_DTB='rk3566-lubancat-1.dtb'
             ;;
         0100)
-            BOARD_NAME='LubanCat1N'
-            BOARD_DTB='rk3566-lubancat1-n.dtb'
+            BOARD_NAME='LubanCat-1N'
+            BOARD_DTB='rk3566-lubancat-1n.dtb'
             ;;
         0200)
-            BOARD_NAME='LubanCat Zero N'
-            BOARD_DTB='rk3566-lubancat-zero.dtb'
+            BOARD_NAME='LubanCat-0N'
+            BOARD_DTB='rk3566-lubancat-0.dtb'
             ;;
         0300)
-            BOARD_NAME='LubanCat Zero W'
-            BOARD_DTB='rk3566-lubancat-zero.dtb'
+            BOARD_NAME='LubanCat-0W'
+            BOARD_DTB='rk3566-lubancat-0.dtb'
             ;;
         0400)
-            BOARD_NAME='LubanCat2'
-            BOARD_DTB='rk3568-lubancat2.dtb'
+            BOARD_NAME='LubanCat-2'
+            BOARD_DTB='rk3568-lubancat-2.dtb'
             ;;
         0500 |\
         0600)
-            BOARD_NAME='LubanCat2N'
-            BOARD_DTB='rk3568-lubancat2-n.dtb'
+            BOARD_NAME='LubanCat-2N'
+            BOARD_DTB='rk3568-lubancat-2n.dtb'
             ;;
         0700)
-            BOARD_NAME='LubanCat2IO'
-            BOARD_DTB='rk3568-lubancat2-io.dtb'
+            BOARD_NAME='LubanCat-2IO'
+            BOARD_DTB='rk3568-lubancat-2io.dtb'
             ;;
     esac
 
