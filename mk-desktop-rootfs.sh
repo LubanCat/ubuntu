@@ -157,7 +157,10 @@ echo -e "\033[36m Install Xserver.................... \033[0m"
 apt-mark hold xserver-common xserver-xorg-core xserver-xorg-legacy
 
 #---------update chromium-----
-# \${APT_INSTALL} /packages/chromium/*.deb
+\${APT_INSTALL} /packages/chromium/*.deb
+
+# -------- firefox-esr -----
+# \${APT_INSTALL} /packages/firefox/*.deb
 
 #------------------libdrm------------
 # echo -e "\033[36m Install libdrm.................... \033[0m"
