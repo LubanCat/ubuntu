@@ -2,7 +2,7 @@
 
 TARGET_ROOTFS_DIR=./binary
 MOUNTPOINT=./rootfs
-ROOTFSIMAGE=ubuntu-rootfs.img
+ROOTFSIMAGE=ubuntu-$IMAGE_VERSION-rootfs.img
 
 echo Making rootfs!
 
