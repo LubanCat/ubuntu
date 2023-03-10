@@ -120,7 +120,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
 \apt-get remove -y gnome-bluetooth
-\${APT_INSTALL} gdisk parted bluez* blueman fire-config
+\${APT_INSTALL} gdisk parted bluez* blueman
 
 #Desktop background picture
 ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
@@ -156,6 +156,9 @@ apt-mark hold xserver-common xserver-xorg-core xserver-xorg-legacy
 
 #---------update chromium-----
 \${APT_INSTALL} /packages/chromium/*.deb
+
+# #--------- firefox-esr -----
+# \${APT_INSTALL} /packages/firefox/*.deb
 
 #------------------libdrm------------
 echo -e "\033[36m Install libdrm.................... \033[0m"
