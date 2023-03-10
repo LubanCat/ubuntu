@@ -83,7 +83,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 #------------- LubanCat ------------
-\${APT_INSTALL} gdisk parted bluez* fire-config
+\${APT_INSTALL} gdisk parted bluez*
 
 #---------------Rga--------------
 \${APT_INSTALL} /packages/rga/*.deb
