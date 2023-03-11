@@ -34,14 +34,11 @@ ARCH=arm64 ./mk-base-lite-ubuntu.sh
 # 1.b 构建 desktop 版本基础镜像
 ARCH=arm64  ./mk-base-desktop-ubuntu.sh
 
-# 添加 rk overlay 层
+# 添加 rk overlay 层,并打包ubuntu-rootfs镜像
 # 2.a
 VERSION=debug ARCH=arm64 ./mk-lite-rootfs.sh
 # 2.b SOC参数根据实际情况选择，如rk356x、rk3588
 VERSION=debug ARCH=arm64 SOC=rk356x ./mk-desktop-rootfs.sh
-
-# 3 打包ubuntu-rootfs镜像
-./mk-image.sh
 ```
 
 ## Cross Compile for ARM Debian
