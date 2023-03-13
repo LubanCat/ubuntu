@@ -124,8 +124,9 @@ EOF
 
 ./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
-echo -e "[ Run tar pack ubuntu-base-lite-$ARCH.tar.gz ]"
-sudo tar zcf ubuntu-base-lite-$ARCH.tar.gz $TARGET_ROOTFS_DIR
+DATE=$(date +%Y%m%d)
+echo -e "[ Run tar pack ubuntu-base-lite-$ARCH-$DATE.tar.gz ]"
+sudo tar zcf ubuntu-base-lite-$ARCH-$DATE.tar.gz $TARGET_ROOTFS_DIR
 
 # sudo rm $TARGET_ROOTFS_DIR -r
 
