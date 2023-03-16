@@ -125,12 +125,11 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 #Desktop background picture
 ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
 
+apt install -fy --allow-downgrades /packages/install_packages/*.deb
+
 #---------------power management --------------
 \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
 cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
-
-#---------------Rga--------------
-\${APT_INSTALL} /packages/rga/*.deb
 
 echo -e "\033[36m Setup Video.................... \033[0m"
 \${APT_INSTALL} gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-alsa \
@@ -152,7 +151,7 @@ echo -e "\033[36m Install camera.................... \033[0m"
 echo -e "\033[36m Install Xserver.................... \033[0m"
 \${APT_INSTALL} /packages/xserver/*.deb
 
-apt-mark hold xserver-common xserver-xorg-core xserver-xorg-legacy
+#apt-mark hold xserver-common xserver-xorg-core xserver-xorg-legacy
 
 #---------update chromium-----
 \${APT_INSTALL} /packages/chromium/*.deb
@@ -175,11 +174,6 @@ sed -i "1aexport LD_PRELOAD=libdrm-cursor.so.1" /usr/bin/X
 # #------------------blueman------------
 # echo -e "\033[36m Install blueman.................... \033[0m"
 # #\${APT_INSTALL} /packages/blueman/*.deb
-
-# #------------------rkwifibt------------
-# echo -e "\033[36m Install rkwifibt.................... \033[0m"
-# \${APT_INSTALL} /packages/rkwifibt/*.deb
-# ln -s /system/etc/firmware /vendor/etc/
 
 if [ "$VERSION" == "debug" ]; then
 #------------------glmark2------------
@@ -210,9 +204,6 @@ echo -e "\033[36m Install rktoolkit.................... \033[0m"
 
 # # source ~/.bashrc
 
-# # \${APT_INSTALL} ttf-wqy-zenhei fonts-aenigma
-# # \${APT_INSTALL} xfonts-intl-chinese
-
 # #ln -sf /usr/bin/startxfce4 /etc/alternatives/x-session-manager
 
 # # mark package to hold
@@ -225,13 +216,11 @@ echo -e "\033[36m Install ffmpeg .................... \033[0m"
 
 #------------------mpv------------
 echo -e "\033[36m Install mpv .................... \033[0m"
-\apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y mpv
+# \apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y mpv
 \${APT_INSTALL} /packages/mpv/*.deb
 
 # HACK to disable the kernel logo on bootup
 sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
-
-apt install -fy --allow-downgrades /packages/install_packages/*.deb
 
 #---------------Custom Script--------------
 systemctl mask systemd-networkd-wait-online.service

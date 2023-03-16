@@ -15,11 +15,11 @@ sudo rm -rf binary/
 if [ ! -d $TARGET_ROOTFS_DIR ] ; then
     sudo mkdir -p $TARGET_ROOTFS_DIR
 
-    if [ ! -e ubuntu-base-20.04.4-base-$ARCH.tar.gz ]; then
+    if [ ! -e ubuntu-base-20.04.5-base-$ARCH.tar.gz ]; then
         echo "\033[36m wget ubuntu-base-20.04-base-x.tar.gz \033[0m"
-        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.4-base-$ARCH.tar.gz
+        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.5-base-$ARCH.tar.gz
     fi
-    sudo tar -xzf ubuntu-base-20.04.4-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
+    sudo tar -xzf ubuntu-base-20.04.5-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
     sudo cp sources.list $TARGET_ROOTFS_DIR/etc/apt/sources.list
     sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
 
@@ -62,9 +62,11 @@ mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 
 # apt install -y language-pack-zh-han* language-pack-en $(check-language-support) ibus-libpinyin language-pack-gnome-zh-hans gnome-getting-started-docs-zh-hk
 
-apt install -y net-tools openssh-server ifupdown alsa-utils ntp network-manager \
-gdb inetutils-ping python libssl-dev vsftpd tcpdump can-utils i2c-tools strace  \
-vim iperf3 ethtool netplan.io acpid toilet htop pciutils usbutils whiptail curl gnupg
+apt install -y net-tools openssh-server ifupdown alsa-utils ntp \
+                network-manager gdb inetutils-ping python libssl-dev \
+                vsftpd tcpdump can-utils i2c-tools strace vim iperf3 \
+                ethtool netplan.io acpid toilet htop pciutils usbutils \
+                whiptail curl gnupg mpv
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 

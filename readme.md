@@ -39,6 +39,7 @@ ARCH=arm64  ./mk-base-desktop-ubuntu.sh
 VERSION=debug ARCH=arm64 ./mk-lite-rootfs.sh
 # 2.b SOC参数根据实际情况选择，如rk356x、rk3588
 VERSION=debug ARCH=arm64 SOC=rk356x ./mk-desktop-rootfs.sh
+VERSION=debug ARCH=arm64 SOC=rk3588 ./mk-desktop-rootfs.sh
 
 ```
 
