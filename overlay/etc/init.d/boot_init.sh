@@ -32,6 +32,10 @@ board_info() {
             BOARD_NAME='LubanCat-2IO'
             BOARD_DTB='rk3568-lubancat-2io.dtb'
             ;;
+        0001)
+            BOARD_NAME='LubanCat-4'
+            BOARD_DTB='rk3588s-lubancat-4.dtb'
+            ;;
     esac
 
     echo "BOARD_NAME:"$BOARD_NAME
@@ -40,10 +44,18 @@ board_info() {
 
 }
 
+# voltage_scale
+# 1.7578125 8bit
+# 0.439453125 12bit
 get_index(){
     ADC_RAW=$1
     INDEX=0xff
-    declare -a ADC_INDEX=(229 344 460 595 732 858 975 1024)
+
+    if [ `echo "$ADC_voltage_scale > 1 "|bc` -eq 1 ] ; then
+        declare -a ADC_INDEX=(229 344 460 595 732 858 975 1024)
+    else
+        declare -a ADC_INDEX=(916 1376 1840 2380 2928 3432 3900 4096)
+    fi
 
     for i in 00 01 02 03 04 05 06 07; do
         if [ $ADC_RAW -lt ${ADC_INDEX[$i]} ]; then
