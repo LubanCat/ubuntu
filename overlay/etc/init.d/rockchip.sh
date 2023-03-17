@@ -108,10 +108,11 @@ then
 
     install_packages ${CHIPNAME}
 
-    setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
+    if [ -e "/usr/bin/gst-launch-1.0" ] ; then
+       setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
+    fi
 
-    if [ -e "/dev/rfkill" ] ;
-    then
+    if [ -e "/dev/rfkill" ] ; then
        rm /dev/rfkill
     fi
 
@@ -119,13 +120,13 @@ then
     rm -rf /*.tar
 
     # The base target does not come with lightdm/rkaiq_3A
-if [ -e /etc/gdm3/daemon.conf ]; then
-    systemctl restart gdm3.service || true
-elif [ -e /etc/lightdm/lightdm.conf ]; then
-    systemctl restart lightdm.service || true
-fi
+    if [ -e /etc/gdm3/daemon.conf ]; then
+        systemctl restart gdm3.service || true
+    elif [ -e /etc/lightdm/lightdm.conf ]; then
+        systemctl restart lightdm.service || true
+    fi
+    
     systemctl restart rkaiq_3A.service || true
-
     touch /usr/local/first_boot_flag
 fi
 
@@ -148,8 +149,8 @@ then
         mv /etc/Powermanager/01npu /usr/lib/pm-utils/sleep.d/
         mv /etc/Powermanager/02npu /lib/systemd/system-sleep/
     fi
-    mv /etc/Powermanager/03wifibt /usr/lib/pm-utils/sleep.d/
-    mv /etc/Powermanager/04wifibt /lib/systemd/system-sleep/
+    # mv /etc/Powermanager/03wifibt /usr/lib/pm-utils/sleep.d/
+    # mv /etc/Powermanager/04wifibt /lib/systemd/system-sleep/
     mv /etc/Powermanager/triggerhappy /etc/init.d/triggerhappy
 
     rm /etc/Powermanager -rf
