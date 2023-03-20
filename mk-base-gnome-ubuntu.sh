@@ -5,7 +5,12 @@ if [ "$ARCH" == "armhf" ]; then
 elif [ "$ARCH" == "arm64" ]; then
 	ARCH='arm64'
 else
-    echo -e "[ please input the os type,armhf or arm64...... ]"
+    ARCH="arm64"
+    echo -e "\033[47;36m set default ARCH=arm64...... \033[0m"
+fi
+
+if [ ! $TARGET ]; then
+	TARGET='gnome'
 fi
 
 TARGET_ROOTFS_DIR="binary"
@@ -16,7 +21,7 @@ if [ ! -d $TARGET_ROOTFS_DIR ] ; then
     sudo mkdir -p $TARGET_ROOTFS_DIR
 
     if [ ! -e ubuntu-base-20.04.5-base-$ARCH.tar.gz ]; then
-        echo "\033[36m wget ubuntu-base-20.04-base-x.tar.gz \033[0m"
+        echo "\033[47;36m wget ubuntu-base-20.04-base-x.tar.gz \033[0m"
         wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.5-base-$ARCH.tar.gz
     fi
     sudo tar -xzf ubuntu-base-20.04.5-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
@@ -56,14 +61,6 @@ mkdir /var/lib/dpkg/info/
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop-minimal rsyslog sudo dialog apt-utils ntp evtest onboard
 mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
-
-# ##############   xfce4  ###############
-# DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core onboard rsyslog sudo dialog apt-utils ntp evtest udev
-# mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/
-# mkdir /var/lib/dpkg/info/
-# apt-get update
-# DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core onboard rsyslog sudo dialog apt-utils ntp evtest udev
-# mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 
 # apt install -y language-pack-zh-han* language-pack-en $(check-language-support) ibus-libpinyin language-pack-gnome-zh-hans gnome-getting-started-docs-zh-hk
 
@@ -144,9 +141,9 @@ EOF
 sudo umount $TARGET_ROOTFS_DIR/dev
 
 DATE=$(date +%Y%m%d)
-echo -e "[ Run tar pack ubuntu-base-desktop-$ARCH-$DATE.tar.gz ]"
-sudo tar zcf ubuntu-base-desktop-$ARCH-$DATE.tar.gz $TARGET_ROOTFS_DIR
+echo -e "\033[47;36m Run tar pack ubuntu-base-$TARGET-$ARCH-$DATE.tar.gz \033[0m"
+sudo tar zcf ubuntu-base-$TARGET-$ARCH-$DATE.tar.gz $TARGET_ROOTFS_DIR
 
 # sudo rm $TARGET_ROOTFS_DIR -r
 
-echo -e "normal exit"
+echo -e "\033[47;36m normal exit \033[0m"
