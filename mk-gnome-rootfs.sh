@@ -66,6 +66,7 @@ esac
 
 if [ ! $TARGET ]; then
 	TARGET='gnome'
+    echo -e "\033[47;36m set default TARGET=gnome...... \033[0m"
 fi
 
 echo -e "\033[47;36m Building for $ARCH \033[0m"

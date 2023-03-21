@@ -197,7 +197,6 @@ sed -i "/libdrm-cursor.so/d" /etc/ld.so.preload
 sed -i "1aexport LD_PRELOAD=libdrm-cursor.so.1" /usr/bin/X
 
 if [ "$VERSION" == "debug" ]; then
-#------------------glmark2------------
 echo -e "\033[47;36m ------ Install glmark2 ------ \033[0m"
 \${APT_INSTALL} glmark2-es2
 fi
