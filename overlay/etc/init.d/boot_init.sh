@@ -66,6 +66,9 @@ get_index(){
 }
 
 board_id() {
+    ADC_voltage_scale=$(cat /sys/bus/iio/devices/iio\:device0/in_voltage_scale)
+    echo "ADC_voltage_scale:"$ADC_voltage_scale
+
     ADC_CH2_RAW=$(cat /sys/bus/iio/devices/iio\:device0/in_voltage2_raw)
     echo "ADC_CH2_RAW:"$ADC_CH2_RAW
     ADC_CH3_RAW=$(cat /sys/bus/iio/devices/iio\:device0/in_voltage3_raw)
@@ -79,7 +82,6 @@ board_id() {
 
     BOARD_ID=$ADC_CH2_INDEX$ADC_CH3_INDEX
     echo "BOARD_ID:"$BOARD_ID
-
 }
 
 board_id
