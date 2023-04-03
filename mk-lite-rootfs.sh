@@ -91,6 +91,10 @@ sudo cp -rpf packages/$ARCH/* $TARGET_ROOTFS_DIR/packages
 
 #GPU/RGA/CAMERA packages folder
 install_packages
+sudo mkdir -p $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/libmali/libmali-*$MALI*-x11*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/camera_engine/camera_engine_$ISP*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/$RGA/*.deb $TARGET_ROOTFS_DIR/packages/install_packages
 
 # overlay folder
 sudo cp -rpf overlay/* $TARGET_ROOTFS_DIR/
@@ -126,7 +130,6 @@ sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
 
 cat << EOF | sudo chroot $TARGET_ROOTFS_DIR
 
-
 if [ $MIRROR ]; then
 	echo "deb [arch=arm64] https://cloud.embedfire.com/mirrors/ebf-debian $MIRROR main" | sudo tee -a /etc/apt/sources.list
 	curl https://Embedfire.github.io/keyfile | sudo apt-key add -
@@ -140,18 +143,13 @@ chmod +x /etc/rc.local
 
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
-#------------- LubanCat ------------
+echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
 \${APT_INSTALL} gdisk parted bluez*
 
-# #---------------power management --------------
-# \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
-# cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
 
-#---------------Rga--------------
-\${APT_INSTALL} /packages/rga/*.deb
+apt install -fy --allow-downgrades /packages/install_packages/*.deb
 
-#------------------libdrm------------
-echo -e "\033[47;36m Install libdrm.................... \033[0m"
+echo -e "\033[47;36m ------- Install libdrm ------ \033[0m"
 \${APT_INSTALL} /packages/libdrm/*.deb
 
 # HACK to disable the kernel logo on bootup
@@ -159,21 +157,19 @@ sed -i "/exit 0/i \ echo 3 > /sys/class/graphics/fb0/blank" /etc/rc.local
 
 if [ -e "/usr/lib/aarch64-linux-gnu" ] ;
 then
-#------------------rknpu2------------
-echo -e "\033[47;36m move rknpu2.................... \033[0m"
+echo -e "\033[47;36m ------- move rknpu2 --------- \033[0m"
 mv /packages/rknpu2/*.tar  /
 fi
 
-#------------------rktoolkit------------
-echo -e "\033[47;36m Install rktoolkit.................... \033[0m"
+echo -e "\033[47;36m ----- Install rktoolkit ----- \033[0m"
 \${APT_INSTALL} /packages/rktoolkit/*.deb
 
-#---------------Custom Script--------------
+echo -e "\033[47;36m ------- Custom Script ------- \033[0m"
 systemctl mask systemd-networkd-wait-online.service
 systemctl mask NetworkManager-wait-online.service
 rm /lib/systemd/system/wpa_supplicant@.service
 
-#---------------Clean--------------
+echo -e "\033[47;36m  ---------- Clean ----------- \033[0m"
 if [ -e "/usr/lib/arm-linux-gnueabihf/dri" ] ;
 then
         cd /usr/lib/arm-linux-gnueabihf/dri/
@@ -190,8 +186,6 @@ then
 fi
 cd -
 
-#---------------Clean--------------
-echo -e "\033[47;36m  Clean Packages or Cache .................... \033[0m"
 rm -rf /var/lib/apt/lists/*
 rm -rf /var/cache/
 rm -rf /packages/
