@@ -54,9 +54,7 @@ install_packages() {
 		[ -e /usr/lib/aarch64-linux-gnu/ ] && tar xvf /rknpu2-rk3588-*.tar -C /
 		;;
     esac
-
 }
-
 
 function update_npu_fw() {
     /usr/bin/npu-image.sh
@@ -91,7 +89,6 @@ else
     CHIPNAME="rk3036"
 fi
 COMPATIBLE=${COMPATIBLE#rockchip,}
-BOARDNAME=${COMPATIBLE%%rockchip,*}
 
 /etc/init.d/boot_init.sh
 
@@ -108,8 +105,16 @@ then
 
     install_packages ${CHIPNAME}
 
-    if [ -e "/usr/bin/gst-launch-1.0" ] ; then
-       setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
+    if [ -e /usr/bin/gst-launch-1.0 ]; then
+        setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
+
+        # Cannot open pixbuf loader module file
+        if [ -e "/usr/lib/arm-linux-gnueabihf" ] ; then
+            /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
+            update-mime-database /usr/share/mime/
+        elif [ -e "/usr/lib/aarch64-linux-gnu" ]; then
+            /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        fi
     fi
 
     if [ -e "/dev/rfkill" ] ; then
@@ -125,19 +130,13 @@ then
     elif [ -e /etc/lightdm/lightdm.conf ]; then
         systemctl restart lightdm.service || true
     fi
-    
+
     systemctl restart rkaiq_3A.service || true
     touch /usr/local/first_boot_flag
 fi
 
-# enable rkwifbt service
-#service rkwifibt start
-
-# enable async service
-#service async start
-
-# enable adbd service
-#service adbd start
+#usb configfs reset
+/usr/bin/usbdevice restart
 
 # support power management
 if [ -e "/usr/sbin/pm-suspend" -a -e /etc/Powermanager ] ;
@@ -149,8 +148,6 @@ then
         mv /etc/Powermanager/01npu /usr/lib/pm-utils/sleep.d/
         mv /etc/Powermanager/02npu /lib/systemd/system-sleep/
     fi
-    # mv /etc/Powermanager/03wifibt /usr/lib/pm-utils/sleep.d/
-    # mv /etc/Powermanager/04wifibt /lib/systemd/system-sleep/
     mv /etc/Powermanager/triggerhappy /etc/init.d/triggerhappy
 
     rm /etc/Powermanager -rf
@@ -169,9 +166,3 @@ ln -rsf /usr/lib/*/libv4l2.so /usr/lib/
 
 # sync system time
 hwclock --systohc
-
-# read mac-address from efuse
-# if [ "$BOARDNAME" == "rk3288-miniarm" ]; then
-#     MAC=`xxd -s 16 -l 6 -g 1 /sys/bus/nvmem/devices/rockchip-efuse0/nvmem | awk '{print $2$3$4$5$6$7 }'`
-#     ifconfig eth0 hw ether $MAC
-# fi
