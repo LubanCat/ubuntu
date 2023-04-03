@@ -11,6 +11,7 @@ fi
 
 if [ ! $TARGET ]; then
 	TARGET='gnome'
+    echo -e "\033[47;36m set default TARGET=gnome...... \033[0m"
 fi
 
 TARGET_ROOTFS_DIR="binary"
@@ -21,7 +22,7 @@ if [ ! -d $TARGET_ROOTFS_DIR ] ; then
     sudo mkdir -p $TARGET_ROOTFS_DIR
 
     if [ ! -e ubuntu-base-20.04.5-base-$ARCH.tar.gz ]; then
-        echo "\033[47;36m wget ubuntu-base-20.04-base-x.tar.gz \033[0m"
+        echo -e "\033[47;36m wget ubuntu-base-20.04-base-x.tar.gz \033[0m"
         wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.5-base-$ARCH.tar.gz
     fi
     sudo tar -xzf ubuntu-base-20.04.5-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
@@ -35,14 +36,16 @@ if [ ! -d $TARGET_ROOTFS_DIR ] ; then
     fi
 fi
 
-
 finish() {
-	sudo umount $TARGET_ROOTFS_DIR/dev
-	exit -1
+    ./ch-mount.sh -u $TARGET_ROOTFS_DIR
+    echo -e "error exit"
+    exit -1
 }
 trap finish ERR
 
-sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
+echo -e "\033[47;36m Change root.................... \033[0m"
+
+./ch-mount.sh -m $TARGET_ROOTFS_DIR
 
 cat <<EOF | sudo chroot $TARGET_ROOTFS_DIR/
 
@@ -138,7 +141,7 @@ sync
 
 EOF
 
-sudo umount $TARGET_ROOTFS_DIR/dev
+./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
 DATE=$(date +%Y%m%d)
 echo -e "\033[47;36m Run tar pack ubuntu-base-$TARGET-$ARCH-$DATE.tar.gz \033[0m"
