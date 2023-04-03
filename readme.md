@@ -37,7 +37,7 @@ sudo apt-get install -f
 VERSION=debug ./mk-lite-rootfs.sh
 
 # 2.b SOC参数根据实际情况选择，如rk356x、rk3588
-VERSION=debug ./mk-desktop-rootfs.sh
+VERSION=debug TARGET=desktop ./mk-desktop-rootfs.sh
 
 # 2.c 构建镜像，与step1指定的桌面套件版本相同
 VERSION=debug ./mk-gnome-rootfs.sh
