@@ -71,7 +71,7 @@ load-module module-bluetooth-discover
 .ifexists module-esound-protocol-unix.so
 load-module module-esound-protocol-unix
 .endif
-load-module module-native-protocol-unix
+load-module module-native-protocol-unix auth-anonymous=1 socket=/tmp/pulse-socket
 
 ### Network access (may be configured with paprefs, so leave this commented
 ### here if you plan to use paprefs)
@@ -139,4 +139,7 @@ load-module module-filter-apply
 
 ### Make some devices default
 #set-default-sink output
-#set-default-source input
+set-default-source alsa_input.platform-es8388-sound.HiFi__hw_rockchipes8388__source
+set-default-sink alsa_output.platform-es8388-sound.HiFi__hw_rockchipes8388__sink
+set-default-source alsa_input.platform-rk809-sound.HiFi__hw_rockchiprk809__source
+set-default-sink alsa_output.platform-rk809-sound.HiFi__hw_rockchiprk809__sink
