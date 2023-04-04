@@ -49,9 +49,6 @@ echo -e "\033[47;36m Change root.................... \033[0m"
 
 cat <<EOF | sudo chroot $TARGET_ROOTFS_DIR/
 
-echo "export LC_ALL=C" >> ~/.bashrc
-source ~/.bashrc
-
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 apt-get -y update
