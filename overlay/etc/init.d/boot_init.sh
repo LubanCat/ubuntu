@@ -115,9 +115,8 @@ then
 
         service lightdm stop || echo "skip error"
 
-        apt install -fy --allow-downgrades /boot/kerneldeb/*
+        apt install -fy --allow-downgrades /boot/kerneldeb/* || true
         ln -sf dtb/$BOARD_DTB /boot/rk-kernel.dtb
-        cp -f /boot/uEnv/uEnv.txt /boot/uEnv/uEnv.txt.default
         ln -sf $BOARD_uEnv /boot/uEnv/uEnv.txt
 
         touch /boot/boot_init

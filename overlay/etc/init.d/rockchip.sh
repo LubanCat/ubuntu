@@ -100,6 +100,17 @@ then
     echo "It's the first time booting."
     echo "The rootfs will be configured."
 
+    Mem_Size=$(free -m | grep Mem | awk '{print $2}')
+    if [ '1500' -gt $Mem_Size  ] ;
+    then
+        echo 'Mem_Size =' $Mem_Size 'MB , make swap memory '
+        swapoff -a
+        dd if=/dev/zero of=/var/swapfile bs=1M count=1024
+        mkswap /var/swapfile
+        swapon /var/swapfile
+        echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
+    fi
+
     # Force rootfs synced
     mount -o remount,sync /
 
