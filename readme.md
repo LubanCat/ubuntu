@@ -3,6 +3,12 @@
 A set of shell scripts that will build GNU/Linux distribution rootfs image
 for rockchip platform.
 
+## 适用板卡
+
+- 使用RK3566处理器的LubanCat板卡
+- 使用RK3568处理器的LubanCat板卡
+- 使用RK3588处理器的LubanCat板卡
+
 ## 安装依赖
 
 * ubuntu 20.04 (Focal-X11)
