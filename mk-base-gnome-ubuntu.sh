@@ -9,6 +9,10 @@ else
     echo -e "\033[47;36m set default ARCH=arm64...... \033[0m"
 fi
 
+if [ ! $TARGET ]; then
+	TARGET='gnome'
+    echo -e "\033[47;36m set default TARGET=gnome...... \033[0m"
+fi
 
 TARGET_ROOTFS_DIR="binary"
 
@@ -50,10 +54,21 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 apt-get -y update
 apt-get -f -y upgrade
 
-DEBIAN_FRONTEND=noninteractive apt install -y rsyslog sudo dialog apt-utils ntp evtest acpid
-apt install -y net-tools openssh-server ifupdown alsa-utils ntp network-manager \
-               gdb inetutils-ping libssl-dev vsftpd tcpdump can-utils i2c-tools strace  \
-               vim iperf3 ethtool netplan.io toilet htop pciutils usbutils whiptail curl gnupg
+##############   gnome  ###############
+DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop-minimal rsyslog sudo dialog apt-utils ntp evtest onboard
+mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/
+mkdir /var/lib/dpkg/info/
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop-minimal rsyslog sudo dialog apt-utils ntp evtest onboard
+mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
+
+# apt install -y language-pack-zh-han* language-pack-en $(check-language-support) ibus-libpinyin language-pack-gnome-zh-hans gnome-getting-started-docs-zh-hk
+
+apt install -y net-tools openssh-server ifupdown alsa-utils ntp \
+                network-manager gdb inetutils-ping libssl-dev \
+                vsftpd tcpdump can-utils i2c-tools strace vim iperf3 \
+                ethtool netplan.io acpid toilet htop pciutils usbutils \
+                whiptail curl gnupg mpv
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
@@ -126,8 +141,8 @@ EOF
 ./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
 DATE=$(date +%Y%m%d)
-echo -e "\033[47;36m Run tar pack ubuntu-base-lite-$ARCH-$DATE.tar.gz \033[0m"
-sudo tar zcf ubuntu-base-lite-$ARCH-$DATE.tar.gz $TARGET_ROOTFS_DIR
+echo -e "\033[47;36m Run tar pack ubuntu-base-$TARGET-$ARCH-$DATE.tar.gz \033[0m"
+sudo tar zcf ubuntu-base-$TARGET-$ARCH-$DATE.tar.gz $TARGET_ROOTFS_DIR
 
 # sudo rm $TARGET_ROOTFS_DIR -r
 
