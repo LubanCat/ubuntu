@@ -1,7 +1,6 @@
 [Unit]
 Description=enable ASYNC for Ubuntu Display
-Before=lightdm.service
-After=NetworkManager.service
+Before=rockchip.service
 
 [Service]
 Type=forking

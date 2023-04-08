@@ -26,7 +26,7 @@ USB_CONFIGS_DIR=${USB_CONFIGFS_DIR}/configs/${USB_SKELETON}
 
 # For VBUS_ALWAYS_ON usb otg is not support ums
 # Since the block to ums is always occupated by USB due to no disconneted state
-UMS_BLOCK=/userdata/ums_shared.img
+UMS_BLOCK=/ums_shared.img
 UMS_BLOCK_SIZE=0	#unit M
 UMS_BLOCK_TYPE=fat
 UMS_BLOCK_AUTO_MOUNT=off
@@ -57,7 +57,7 @@ configfs_init()
 	echo 0x0310 > ${USB_CONFIGFS_DIR}/bcdDevice
 	echo 0x0200 > ${USB_CONFIGFS_DIR}/bcdUSB
 	mkdir ${USB_STRINGS_DIR}   -m 0770
-	SERIAL=`cat /proc/cpuinfo | grep Serial | awk '{print $3}'`
+	SERIAL=$(cat /proc/cpuinfo | grep Serial | awk '{print $3}')
 	if [ -z $SERIAL ];then
 		SERIAL=0123456789ABCDEF
 	fi
@@ -89,8 +89,8 @@ make_config_string()
 parse_parameter()
 {
 	# find name and var
-	NAME=`echo $1 | awk -F "=" '{print $1}'`
-	VAR=`echo $1 | awk -F "=" '{print $2}'`
+	NAME=$(echo $1 | awk -F "=" '{print $1}')
+	VAR=$(echo $1 | awk -F "=" '{print $2}')
 
 	case "$NAME" in
 		ums_block)
@@ -297,7 +297,7 @@ run_binary()
 
 program_kill()
 {
-	P_PID=`ps | grep $1 | grep -v grep | awk '{print $1}'`
+	P_PID=$(ps | grep $1 | grep -v grep | awk '{print $1}')
 	test -z ${P_PID} || kill -9 ${P_PID}
 }
 
@@ -334,7 +334,7 @@ start)
 	bind_functions
 	pre_run_binary
 	sleep 1
-	UDC=`ls /sys/class/udc/| awk '{print $1}'`
+	UDC=$(ls /sys/class/udc/| awk '{print $1}')
 	echo $UDC > ${USB_CONFIGFS_DIR}/UDC
 	run_binary
 	;;

@@ -29,6 +29,7 @@ load-module module-card-restore
 ### stored in /usr/share/application
 load-module module-augment-properties
 
+load-module module-switch-on-connect blacklist=""
 ### Should be after module-*-restore but before module-*-detect
 load-module module-switch-on-port-available
 
@@ -44,10 +45,10 @@ load-module module-switch-on-port-available
 
 ### Automatically load driver modules depending on the hardware available
 .ifexists module-udev-detect.so
-load-module module-udev-detect use_ucm=no
+load-module module-udev-detect
 .else
 ### Use the static hardware detection module (for systems that lack udev support)
-load-module module-detect use_ucm=no
+load-module module-detect
 .endif
 
 ### Automatically connect sink and source if JACK server is present
@@ -70,7 +71,7 @@ load-module module-bluetooth-discover
 .ifexists module-esound-protocol-unix.so
 load-module module-esound-protocol-unix
 .endif
-load-module module-native-protocol-unix
+load-module module-native-protocol-unix auth-anonymous=1 socket=/tmp/pulse-socket
 
 ### Network access (may be configured with paprefs, so leave this commented
 ### here if you plan to use paprefs)
@@ -138,4 +139,7 @@ load-module module-filter-apply
 
 ### Make some devices default
 #set-default-sink output
-#set-default-source input
+set-default-source alsa_input.platform-es8388-sound.HiFi__hw_rockchipes8388__source
+set-default-sink alsa_output.platform-es8388-sound.HiFi__hw_rockchipes8388__sink
+set-default-source alsa_input.platform-rk809-sound.HiFi__hw_rockchiprk809__source
+set-default-sink alsa_output.platform-rk809-sound.HiFi__hw_rockchiprk809__sink
