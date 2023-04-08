@@ -52,8 +52,8 @@ apt-get -f -y upgrade
 
 DEBIAN_FRONTEND=noninteractive apt install -y rsyslog sudo dialog apt-utils ntp evtest acpid
 apt install -y net-tools openssh-server ifupdown alsa-utils ntp network-manager \
-gdb inetutils-ping python libssl-dev vsftpd tcpdump can-utils i2c-tools strace  \
-vim iperf3 ethtool netplan.io toilet htop pciutils usbutils whiptail curl gnupg
+               gdb inetutils-ping libssl-dev vsftpd tcpdump can-utils i2c-tools strace  \
+               vim iperf3 ethtool netplan.io toilet htop pciutils usbutils whiptail curl gnupg
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 

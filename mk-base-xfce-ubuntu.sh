@@ -65,7 +65,7 @@ mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 # apt install -y language-pack-zh-han* language-pack-en $(check-language-support) ibus-libpinyin language-pack-gnome-zh-hans gnome-getting-started-docs-zh-hk
 
 apt install -y net-tools openssh-server ifupdown alsa-utils ntp \
-                network-manager gdb inetutils-ping python libssl-dev \
+                network-manager gdb inetutils-ping libssl-dev \
                 vsftpd tcpdump can-utils i2c-tools strace vim iperf3 \
                 ethtool netplan.io acpid toilet htop pciutils usbutils \
                 whiptail curl gnupg mpv
