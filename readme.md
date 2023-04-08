@@ -3,6 +3,13 @@
 A set of shell scripts that will build GNU/Linux distribution rootfs image
 for rockchip platform.
 
+## 适用板卡
+
+此分支不是LubanCat维护的主要分支，建议使用ubuntu20.04分支
+
+- 使用RK3566处理器的LubanCat板卡
+- 使用RK3568处理器的LubanCat板卡
+
 ## Available Distro
 
 * ubuntu 18.04 (Bionic-X11)
@@ -22,15 +29,15 @@ sudo apt-get install -f
 
 ```
 # 1.a 构建 lite 版本基础镜像
-ARCH=arm64 ./mk-base-lite-ubuntu.sh
+./mk-base-lite-ubuntu.sh
 
 # 1.b 构建 desktop 版本基础镜像
-ARCH=arm64  ./mk-base-desktop-ubuntu.sh
+./mk-base-desktop-ubuntu.sh
 
 # 添加 rk overlay 层,并打包ubuntu-rootfs镜像
 # 2.a
-VERSION=debug ARCH=arm64 ./mk-lite-rootfs.sh
-# 2.b SOC参数根据实际情况选择，如rk356x、rk3588
-VERSION=debug ARCH=arm64 SOC=rk356x ./mk-desktop-rootfs.sh
+VERSION=debug SOC=rk356x ./mk-lite-rootfs.sh
+# 2.b SOC参数根据实际情况选择，如rk356x
+VERSION=debug SOC=rk356x ./mk-desktop-rootfs.sh
 
 ```
