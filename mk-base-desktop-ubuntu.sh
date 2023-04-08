@@ -5,7 +5,8 @@ if [ "$ARCH" == "armhf" ]; then
 elif [ "$ARCH" == "arm64" ]; then
 	ARCH='arm64'
 else
-    echo -e "[ please input the os type,armhf or arm64...... ]"
+    ARCH="arm64"
+    echo -e "\033[47;36m set default ARCH=arm64...... \033[0m"
 fi
 
 TARGET_ROOTFS_DIR="binary"
@@ -37,7 +38,7 @@ finish() {
 }
 trap finish ERR
 
-echo "[ Change root.....................]"
+echo -e "\033[47;36m Change root.................... \033[0m"
 
 ./ch-mount.sh -m $TARGET_ROOTFS_DIR
 
@@ -48,13 +49,19 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 apt-get -y update
 apt-get -f -y upgrade
 
-DEBIAN_FRONTEND=noninteractive apt install -y sudo ntp apt-utils \
-  	evtest lightdm xubuntu-core onboard bluez ntp udev
+##############   xfce4  ###############
+DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core onboard sudo dialog apt-utils evtest
+mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/
+mkdir /var/lib/dpkg/info/
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core onboard sudo dialog apt-utils evtest
+mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 
-\${APT_INSTALL} rsyslog network-manager net-tools inetutils-ping ifupdown ntp \
-\${APT_INSTALL} openssh-server libssl-dev vsftpd tcpdump i2c-tools udev netplan.io \
-\${APT_INSTALL} bash-completion alsa-utils usbutils pciutils toilet bsdmainutils \
-\${APT_INSTALL} vim iperf3 ethtool htop gdb can-utils strace acpid whiptail curl gnupg\
+apt install -y net-tools openssh-server ifupdown alsa-utils ntp \
+                network-manager gdb inetutils-ping python libssl-dev \
+                vsftpd tcpdump can-utils i2c-tools strace vim iperf3 \
+                ethtool netplan.io acpid toilet htop pciutils usbutils \
+                whiptail curl gnupg mpv
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
@@ -127,9 +134,9 @@ EOF
 ./ch-mount.sh -u $TARGET_ROOTFS_DIR
 
 DATE=$(date +%Y%m%d)
-echo -e "[ Run tar pack ubuntu-base-desktop-$ARCH-$DATE.tar.gz ]"
+echo -e "\033[47;36m Run tar pack ubuntu-base-desktop-$ARCH-$DATE.tar.gz \033[0m"
 sudo tar zcf ubuntu-base-desktop-$ARCH-$DATE.tar.gz $TARGET_ROOTFS_DIR
 
 # sudo rm $TARGET_ROOTFS_DIR -r
 
-echo -e "normal exit"
+echo -e "\033[47;36m normal exit \033[0m"
