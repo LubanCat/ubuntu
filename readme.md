@@ -11,6 +11,8 @@ for rockchip platform.
 
 ## 安装依赖
 
+推荐使用Ubuntu20.04及以上版本主机构建根文件系统
+
 * ubuntu 20.04 (Focal-X11)
 
 ```
@@ -31,7 +33,7 @@ sudo apt-get install -f
 ./mk-base-lite-ubuntu.sh
 
 # 1.b 构建 desktop 版本基础镜像（默认xfce）
-./mk-base-desktop-ubuntu.sh
+TARGET=desktop ./mk-base-desktop-ubuntu.sh
 
 # 1.c 构建指定桌面套件的基础镜像
 ./mk-base-gnome-ubuntu.sh
