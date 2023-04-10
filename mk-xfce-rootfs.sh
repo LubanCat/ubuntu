@@ -150,7 +150,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
 \apt-get remove -y gnome-bluetooth
-\${APT_INSTALL} gdisk parted bluez* blueman
+\${APT_INSTALL} gdisk parted bluez bluez-tools bc xinput
 
 #Desktop background picture
 ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
