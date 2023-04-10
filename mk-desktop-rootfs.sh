@@ -122,7 +122,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
 \apt-get remove -y gnome-bluetooth
-\${APT_INSTALL} gdisk parted bluez bluez-tools
+\${APT_INSTALL} gdisk parted bluez bluez-tools bc xinput
 
 systemctl disable apt-daily.service
 systemctl disable apt-daily.timer

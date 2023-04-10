@@ -121,7 +121,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
-\${APT_INSTALL} gdisk parted bluez bluez-tools
+\${APT_INSTALL} gdisk parted bluez bluez-tools bc xinput
 
 
 apt install -fy --allow-downgrades /packages/install_packages/*.deb
