@@ -1,13 +1,14 @@
 #start
 [Unit]
 Description=Setup rockchip platform environment
-After=lightdm.service
+DefaultDependencies=no
+After=local-fs.target
 
 [Service]
 Type=simple
 ExecStart=/etc/init.d/rockchip.sh
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=sysinit.target
 #end
 

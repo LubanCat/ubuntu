@@ -10,60 +10,51 @@
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 install_packages() {
     case $1 in
         rk3288)
 		MALI=midgard-t76x-r18p0-r0p0
 		ISP=rkisp
-		RGA=rga
 		# 3288w
 		cat /sys/devices/platform/*gpu/gpuinfo | grep -q r1p0 && \
 		MALI=midgard-t76x-r18p0-r1p0
+		sed -i "s/always/none/g" /etc/X11/xorg.conf.d/20-modesetting.conf
 		;;
         rk3399|rk3399pro)
 		MALI=midgard-t86x-r18p0
 		ISP=rkisp
-		RGA=rga
+		sed -i "s/always/none/g" /etc/X11/xorg.conf.d/20-modesetting.conf
 		;;
         rk3328)
 		MALI=utgard-450
 		ISP=rkisp
-		RGA=rga
-        ;;
+		sed -i "s/always/none/g" /etc/X11/xorg.conf.d/20-modesetting.conf
+		;;
         rk3326|px30)
 		MALI=bifrost-g31-g2p0
 		ISP=rkisp
-		RGA=rga
+		sed -i "s/always/none/g" /etc/X11/xorg.conf.d/20-modesetting.conf
 		;;
         rk3128|rk3036)
 		MALI=utgard-400
 		ISP=rkisp
-		RGA=rga
+		sed -i "s/always/none/g" /etc/X11/xorg.conf.d/20-modesetting.conf
 		;;
         rk3568|rk3566)
 		MALI=bifrost-g52-g2p0
 		ISP=rkaiq_rk3568
-		RGA=rga
+		sed -i "s/always/none/g" /etc/X11/xorg.conf.d/20-modesetting.conf
+		sed -i "s/glamor/exa/g" /etc/X11/xorg.conf.d/20-modesetting.conf
+		[ -e /usr/lib/aarch64-linux-gnu/ ] && tar xvf /rknpu2-rk3568-*.tar -C /
 		;;
         rk3588|rk3588s)
 		ISP=rkaiq_rk3588
 		MALI=valhall-g610-g6p0
-		RGA=rga2
+		[ -e /usr/lib/aarch64-linux-gnu/ ] && tar xvf /rknpu2-rk3588-*.tar -C /
 		;;
     esac
-
-    Files=$(find / -maxdepth 1 -name "libmali-$MALI-x11-dbgsym*.deb")
-    if [ $Files ]; then
-        echo "install libmali-*$MALI*-x11*.deb, wait!"
-        apt install -fy --allow-downgrades /libmali-*$MALI*-x11*.deb
-        apt install -fy --allow-downgrades /camera_engine_$ISP*.deb
-        apt install -fy --allow-downgrades /$RGA/*.deb
-        echo "install libmali-*$MALI*-x11*.deb, successful!"
-    else
-        echo "No libmali-*$MALI*-x11*.deb, skip!"
-    fi 
 }
-
 
 function update_npu_fw() {
     /usr/bin/npu-image.sh
@@ -98,9 +89,10 @@ else
     CHIPNAME="rk3036"
 fi
 COMPATIBLE=${COMPATIBLE#rockchip,}
-BOARDNAME=${COMPATIBLE%%rockchip,*}
 
 /etc/init.d/boot_init.sh
+
+sleep 3s
 
 # first boot configure
 if [ ! -e "/usr/local/first_boot_flag" ] ;
@@ -108,42 +100,54 @@ then
     echo "It's the first time booting."
     echo "The rootfs will be configured."
 
+    Mem_Size=$(free -m | grep Mem | awk '{print $2}')
+    if [ '1500' -gt $Mem_Size  ] ;
+    then
+        echo 'Mem_Size =' $Mem_Size 'MB , make swap memory '
+        swapoff -a
+        dd if=/dev/zero of=/var/swapfile bs=1M count=1024
+        mkswap /var/swapfile
+        swapon /var/swapfile
+        echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
+    fi
+
     # Force rootfs synced
     mount -o remount,sync /
 
     install_packages ${CHIPNAME}
 
-    rm -rf /rga*
-    rm -rf /*.deb
-
     if [ -e /usr/bin/gst-launch-1.0 ]; then
-        setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0 
+        setcap CAP_SYS_ADMIN+ep /usr/bin/gst-launch-1.0
 
         # Cannot open pixbuf loader module file
-        if [ -e "/usr/lib/arm-linux-gnueabihf" ] ;
-        then
-        /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
-        update-mime-database /usr/share/mime/
-        elif [ -e "/usr/lib/aarch64-linux-gnu" ];
-        then
-        /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        if [ -e "/usr/lib/arm-linux-gnueabihf" ] ; then
+            /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/arm-linux-gnueabihf/gdk-pixbuf-2.0/2.10.0/loaders.cache
+            update-mime-database /usr/share/mime/
+        elif [ -e "/usr/lib/aarch64-linux-gnu" ]; then
+            /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > /usr/lib/aarch64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
         fi
+    fi
 
-        rm -rf /packages
-        # The base target does not come with lightdm
+    if [ -e "/dev/rfkill" ] ; then
+       rm /dev/rfkill
+    fi
+
+    rm -rf /*.deb
+    rm -rf /*.tar
+
+    # The base target does not come with lightdm/rkaiq_3A
+    if [ -e /etc/gdm3/daemon.conf ]; then
+        systemctl restart gdm3.service || true
+    elif [ -e /etc/lightdm/lightdm.conf ]; then
         systemctl restart lightdm.service || true
     fi
+
+    systemctl restart rkaiq_3A.service || true
     touch /usr/local/first_boot_flag
 fi
 
-# enable rkwifbt service
-#service rkwifibt start
-
-# enable async service
-#service async start
-
-# enable adbd service
-#service adbd start
+#usb configfs reset
+/usr/bin/usbdevice restart
 
 # support power management
 if [ -e "/usr/sbin/pm-suspend" -a -e /etc/Powermanager ] ;
@@ -173,9 +177,3 @@ ln -rsf /usr/lib/*/libv4l2.so /usr/lib/
 
 # sync system time
 hwclock --systohc
-
-# read mac-address from efuse
-# if [ "$BOARDNAME" == "rk3288-miniarm" ]; then
-#     MAC=`xxd -s 16 -l 6 -g 1 /sys/bus/nvmem/devices/rockchip-efuse0/nvmem | awk '{print $2$3$4$5$6$7 }'`
-#     ifconfig eth0 hw ether $MAC
-# fi
