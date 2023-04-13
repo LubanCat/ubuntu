@@ -123,7 +123,7 @@ fi
 
 \${APT_INSTALL} net-tools openssh-server ifupdown alsa-utils ntp network-manager gdb inetutils-ping libssl-dev \
     vsftpd tcpdump can-utils i2c-tools strace vim iperf3 ethtool netplan.io toilet htop pciutils usbutils curl \
-    whiptail gnupg bc xinput gdisk parted gcc sox libsox-fmt-all gpiod libgpiod-dev python3-pip python3-libgpiod
+    whiptail gnupg bc xinput gdisk parted gcc sox libsox-fmt-all gpiod libgpiod-dev python3-pip python3-libgpiod 
 
 \${APT_INSTALL} ttf-wqy-zenhei xfonts-intl-chinese
 
@@ -147,6 +147,8 @@ if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     echo "export LC_ALL=zh_CN.UTF-8" > /etc/profile.d/zh_CN
     echo "export LANG=zh_CN.UTF-8" >> /etc/profile.d/zh_CN
     echo "export LANGUAGE=zh_CN.UTF-8" >> /etc/profile.d/zh_CN
+
+    \${APT_INSTALL} ipython3 jupyter scratch
 fi
 
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
