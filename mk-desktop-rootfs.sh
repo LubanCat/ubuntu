@@ -1,1 +1,0 @@
-mk-xfce-rootfs.sh
