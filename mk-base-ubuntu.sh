@@ -114,11 +114,11 @@ elif [ "$TARGET" == "gnome-full" ]; then
     mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 elif [ "$TARGET" == "xfce-full" ]; then
     DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-desktop onboard rsyslog sudo dialog apt-utils ntp evtest udev
-    # mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/
-    # mkdir /var/lib/dpkg/info/
-    # apt-get update
-    # DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-core onboard rsyslog sudo dialog apt-utils ntp evtest udev
-    # mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
+    mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/
+    mkdir /var/lib/dpkg/info/
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt install -y xubuntu-desktop onboard rsyslog sudo dialog apt-utils ntp evtest udev
+    mv /var/lib/dpkg/info_old/* /var/lib/dpkg/info/
 fi
 
 \${APT_INSTALL} net-tools openssh-server ifupdown alsa-utils ntp network-manager gdb inetutils-ping libssl-dev \
@@ -129,13 +129,18 @@ fi
 
 if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     apt purge ibus firefox -y
+
+    echo -e "\033[47;36m Install Chinese fonts.................... \033[0m"
     \${APT_INSTALL} language-pack-zh-hans fonts-noto-cjk-extra gnome-user-docs-zh-hans language-pack-gnome-zh-hans
 
     # set default xinput for fcitx
     \${APT_INSTALL} fcitx fcitx-table fcitx-googlepinyin fcitx-pinyin fcitx-config-gtk
     sed -i 's/default/fcitx/g' /etc/X11/xinit/xinputrc
 
-    echo -e "\033[47;36m Install Chinese fonts.................... \033[0m"
+    \${APT_INSTALL} ipython3 jupyter scratch
+fi
+
+if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     # Uncomment zh_CN.UTF-8 for inclusion in generation
     sed -i 's/^# *\(zh_CN.UTF-8\)/\1/' /etc/locale.gen
     echo "LANG=zh_CN.UTF-8" >> /etc/default/locale
@@ -144,11 +149,15 @@ if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     locale-gen zh_CN.UTF-8
 
     # Export env vars
-    echo "export LC_ALL=zh_CN.UTF-8" > /etc/profile.d/zh_CN
-    echo "export LANG=zh_CN.UTF-8" >> /etc/profile.d/zh_CN
-    echo "export LANGUAGE=zh_CN.UTF-8" >> /etc/profile.d/zh_CN
+    echo "LC_ALL=zh_CN.UTF-8" >> /etc/environment    
+    echo "LANG=zh_CN.UTF-8" >> /etc/environment
+    echo "LANGUAGE=zh_CN:zh:en_US:en" >> /etc/environment
 
-    \${APT_INSTALL} ipython3 jupyter scratch
+    echo "export LC_ALL=zh_CN.UTF-8" >> /etc/profile.d/zh_CN.sh
+    echo "export LANG=zh_CN.UTF-8" >> /etc/profile.d/zh_CN.sh
+    echo "export LANGUAGE=zh_CN:zh:en_US:en" >> /etc/profile.d/zh_CN.sh
+
+    \${APT_INSTALL} $(check-language-support)
 fi
 
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
