@@ -302,6 +302,7 @@ then
         mv /*.so /usr/lib/aarch64-linux-gnu/dri/
         rm /etc/profile.d/qt.sh
 fi
+rm -rf /home/$(whoami)
 rm -rf /var/lib/apt/lists/*
 rm -rf /var/cache/
 rm -rf /packages/
