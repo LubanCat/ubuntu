@@ -44,6 +44,14 @@ board_info() {
             BOARD_DTB='rk3588s-lubancat-4.dtb'
             BOARD_uEnv='uEnvLubanCat4.txt'
             ;;
+        0402)
+            BOARD_NAME='LubanCat-2 v1'
+            BOARD_DTB='rk3568-lubancat-2-v1.dtb'
+            BOARD_uEnv='uEnvLubanCat2-V1.txt'
+            ;;
+        *)
+            echo "Device ID Error !!!"
+            exit ;;
     esac
 
     echo "BOARD_NAME:"$BOARD_NAME
