@@ -2,3 +2,4 @@ binary/
 *.tar.gz
 *.img
 rootfs/
+*.7z
