@@ -185,7 +185,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
-\${APT_INSTALL} fire-config
+\${APT_INSTALL} fire-config u-boot-tools
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
     \${APT_INSTALL} gdisk
     #Desktop background picture
