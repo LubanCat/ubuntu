@@ -35,7 +35,12 @@ board_info() {
             BOARD_uEnv='uEnvLubanCat2N.txt'
             ;;
         0700)
-            BOARD_NAME='LubanCat-2IO'
+            BOARD_NAME='LubanCat-2IO-GF'
+            BOARD_DTB='rk3568-lubancat-2io.dtb'
+            BOARD_uEnv='uEnvLubanCat2IO.txt'
+            ;;
+        0701)
+            BOARD_NAME='LubanCat-2IO-BTB'
             BOARD_DTB='rk3568-lubancat-2io.dtb'
             BOARD_uEnv='uEnvLubanCat2IO.txt'
             ;;
@@ -51,7 +56,10 @@ board_info() {
             ;;
         *)
             echo "Device ID Error !!!"
-            exit ;;
+            BOARD_NAME='LubanCat-series.dtb'
+            BOARD_DTB='rk356x-lubancat-rk_series.dtb'
+            BOARD_uEnv='uEnvLubanCat-series.txt'
+            ;;
     esac
 
     echo "BOARD_NAME:"$BOARD_NAME
@@ -116,7 +124,7 @@ then
     if [ ! -e "/dev/disk/by-partlabel/userdata" ] ;
     then
 
-        if [ ! -e "/boot/rk-kernel.dtb" ] ; then
+        if [ ! -L "/boot/rk-kernel.dtb" ] ; then
             mount /dev/disk/by-partlabel/boot /boot
             echo "PARTLABEL=boot  /boot  auto  defaults  0 2" >> /etc/fstab
         fi
