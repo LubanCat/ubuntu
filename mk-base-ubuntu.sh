@@ -138,7 +138,7 @@ if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     \${APT_INSTALL} fcitx fcitx-table fcitx-googlepinyin fcitx-pinyin fcitx-config-gtk
     sed -i 's/default/fcitx/g' /etc/X11/xinit/xinputrc
 
-    \${APT_INSTALL} ipython3 jupyter scratch
+    \${APT_INSTALL} ipython3 jupyter
 fi
 
 if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
