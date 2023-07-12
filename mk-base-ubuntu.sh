@@ -158,7 +158,7 @@ elif [ "$TARGET" == "lite" ]; then
     \${APT_INSTALL}  
 fi
 
-pip3 install python-periphery Adafruit-Blinka
+pip3 install python-periphery Adafruit-Blinka -i https://mirrors.aliyun.com/pypi/simple/
 
 HOST=lubancat
 
