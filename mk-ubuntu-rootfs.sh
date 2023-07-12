@@ -188,12 +188,12 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
-    \${APT_INSTALL} gdisk
+    \${APT_INSTALL} gdisk fire-config-gui
     #Desktop background picture
     ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/backgrounds/warty-final-ubuntu.png
 elif [[ "$TARGET" == "xfce" || "$TARGET" == "xfce-full" ]]; then
     \apt-get remove -y gnome-bluetooth
-    \${APT_INSTALL} bluez bluez-tools
+    \${APT_INSTALL} bluez bluez-tools fire-config-gui
     #Desktop background picture
     ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
 elif [ "$TARGET" == "lite" ]; then
@@ -281,6 +281,11 @@ fi
 if [[ "$TARGET" == "gnome" ||  "$TARGET" == "xfce" || "$TARGET" == "gnome-full" || "$TARGET" == "xfce-full" ]]; then
     echo -e "\033[47;36m ------- Install mpv --------- \033[0m"
     \apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y /packages/mpv/*.deb
+fi
+
+if [[ "$TARGET" == "gnome-full" || "$TARGET" == "xfce-full" ]]; then
+    echo -e "\033[47;36m ------ Install scratch ------- \033[0m"
+    \${APT_INSTALL} /packages/embedfire/scratch_*.deb
 fi
 
 echo -e "\033[47;36m ------- Custom Script ------- \033[0m"
