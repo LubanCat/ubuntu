@@ -89,7 +89,7 @@ install_packages() {
         ISP=rkaiq_rk3588
         MALI=valhall-g610-g6p0
         RGA=rga2
-        # MIRROR=carp-rk3588
+        MIRROR=carp-rk356x
         ;;
     esac
 }
