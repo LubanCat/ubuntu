@@ -72,24 +72,20 @@ install_packages() {
         rk3399|rk3399pro)
         MALI=midgard-t86x-r18p0
         ISP=rkisp
-        RGA=rga
         ;;
-        rk3328)
+        rk3328|rk3528)
         MALI=utgard-450
         ISP=rkisp
-        RGA=rga
         ;;
         rk356x|rk3566|rk3568)
         MALI=bifrost-g52-g2p0
         ISP=rkaiq_rk3568
-        RGA=rga
         MIRROR=carp-rk356x
         ;;
         rk3588|rk3588s)
         ISP=rkaiq_rk3588
-        MALI=valhall-g610-g6p0
-        RGA=rga2
-        # MIRROR=carp-rk3588
+        MALI=valhall-g610-g13p0
+        MIRROR=carp-rk3588
         ;;
     esac
 }
@@ -108,6 +104,8 @@ echo -e "\033[47;36m Building for $ARCH \033[0m"
 if [ ! $VERSION ]; then
     VERSION="release"
 fi
+
+echo -e "\033[47;36m Building for $VERSION \033[0m"
 
 if [ ! -e ubuntu-base-"$TARGET"-$ARCH-*.tar.gz ]; then
     echo "\033[41;36m Run mk-base-ubuntu.sh first \033[0m"
@@ -128,12 +126,11 @@ sudo tar -xpf ubuntu-base-$TARGET-$ARCH-*.tar.gz
 sudo mkdir -p $TARGET_ROOTFS_DIR/packages
 sudo cp -rpf packages/$ARCH/* $TARGET_ROOTFS_DIR/packages
 
-#GPU/RGA/CAMERA packages folder
+#GPU/CAMERA packages folder
 install_packages
 sudo mkdir -p $TARGET_ROOTFS_DIR/packages/install_packages
 sudo cp -rpf packages/$ARCH/libmali/libmali-*$MALI*-x11*.deb $TARGET_ROOTFS_DIR/packages/install_packages
-sudo cp -rpf packages/$ARCH/camera_engine/camera_engine_$ISP*.deb $TARGET_ROOTFS_DIR/packages/install_packages
-sudo cp -rpf packages/$ARCH/$RGA/*.deb $TARGET_ROOTFS_DIR/packages/install_packages
+sudo cp -rpf packages/$ARCH/${ISP:0:5}/camera_engine_$ISP*.deb $TARGET_ROOTFS_DIR/packages/install_packages
 
 # overlay folder
 sudo cp -rpf overlay/* $TARGET_ROOTFS_DIR/
@@ -144,7 +141,7 @@ sudo cp -rpf overlay-firmware/* $TARGET_ROOTFS_DIR/
 # overlay-debug folder
 # adb, video, camera  test file
 if [ "$VERSION" == "debug" ]; then
-    sudo cp -rf overlay-debug/* $TARGET_ROOTFS_DIR/
+    sudo cp -rpf overlay-debug/* $TARGET_ROOTFS_DIR/
 fi
 ## hack the serial
 sudo cp -f overlay/usr/lib/systemd/system/serial-getty@.service $TARGET_ROOTFS_DIR/lib/systemd/system/serial-getty@.service
@@ -163,15 +160,26 @@ elif [ "$ARCH" == "arm64"  ]; then
     sudo cp /usr/bin/qemu-aarch64-static $TARGET_ROOTFS_DIR/usr/bin/
 fi
 
-sudo cp -f /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/
-
 sudo mount -o bind /dev $TARGET_ROOTFS_DIR/dev
+
+ID=$(stat --format %u $TARGET_ROOTFS_DIR)
 
 cat << EOF | sudo chroot $TARGET_ROOTFS_DIR
 
+# Fixup owners
+if [ "$ID" -ne 0 ]; then
+    find / -user $ID -exec chown -h 0:0 {} \;
+fi
+for u in \$(ls /home/); do
+    chown -h -R \$u:\$u /home/\$u
+done
+
 if [ $MIRROR ]; then
-    echo "deb [arch=arm64] https://cloud.embedfire.com/mirrors/ebf-debian $MIRROR main" | sudo tee -a /etc/apt/sources.list
-    curl https://Embedfire.github.io/keyfile | sudo apt-key add -
+	mkdir -p /etc/apt/keyrings
+	curl -fsSL https://Embedfire.github.io/keyfile | gpg --dearmor -o /etc/apt/keyrings/embedfire.gpg
+	chmod a+r /etc/apt/keyrings/embedfire.gpg
+	echo "deb [arch=arm64 signed-by=/etc/apt/keyrings/embedfire.gpg] https://cloud.embedfire.com/mirrors/ebf-debian carp-lbc main" | tee /etc/apt/sources.list.d/embedfire-lbc.list > /dev/null
+	echo "deb [arch=arm64 signed-by=/etc/apt/keyrings/embedfire.gpg] https://cloud.embedfire.com/mirrors/ebf-debian $MIRROR main" | tee /etc/apt/sources.list.d/embedfire-$MIRROR.list > /dev/null
 fi
 
 export LC_ALL=C.UTF-8
@@ -206,6 +214,9 @@ if [[ "$TARGET" == "gnome" ||  "$TARGET" == "xfce" || "$TARGET" == "gnome-full" 
     \${APT_INSTALL} pm-utils triggerhappy bsdmainutils
     cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.service
 fi
+
+echo -e "\033[47;36m ----------- RGA  ----------- \033[0m"
+\${APT_INSTALL} /packages/rga2/*.deb
 
 if [[ "$TARGET" == "gnome" ||  "$TARGET" == "xfce" || "$TARGET" == "gnome-full" || "$TARGET" == "xfce-full" ]]; then
     echo -e "\033[47;36m ------ Setup Video---------- \033[0m"
