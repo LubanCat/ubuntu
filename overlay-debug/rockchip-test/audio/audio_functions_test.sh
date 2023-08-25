@@ -5,7 +5,7 @@ device_2=$2
 
 echo ""
 echo "*****************************************************"
-echo "*        RK3308 Platform Audio Functions Test       *"
+echo "*      Rockchip Platform Audio Functions Test       *"
 echo "*****************************************************"
 echo "*  Loop playback:                              [0]  *"
 echo "*  Loop capture:                               [1]  *"

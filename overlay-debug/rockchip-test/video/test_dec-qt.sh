@@ -4,6 +4,7 @@ export DISPLAY=:0.0
 #export GST_DEBUG=*:5
 #export GST_DEBUG_FILE=/tmp/2.txt
 #Gstreamer Display: kmssink(qt eglfs),rkximagesink(x11), waylandsink(wayland)
+export mpp_syslog_perror=1
 
 case "$1" in
 	rk3036) ###default the rk3036 use kmssink.

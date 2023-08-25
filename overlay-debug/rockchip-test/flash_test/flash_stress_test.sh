@@ -13,11 +13,11 @@
 # 1.20     2020/07/16 Hans Yang                             1.use /dev/urandom to generate test data
 #Introduction.
 #********************************************************************/
-# usage£º
+# usageï¿½ï¿½
 # sudo flash_stress_test.sh dirnum testcount
-# example  £º
+# example  ï¿½ï¿½
 # 	count for script command:
-#		SLC Nand 128MB, 100K P/E cycles, normaly we test 5K P/E ¡ª¡ª 128MB * 5000
+#		SLC Nand 128MB, 100K P/E cycles, normaly we test 5K P/E ï¿½ï¿½ï¿½ï¿½ 128MB * 5000
 #       src file size 5MB, totle test data 128MB * 5000, testcount = 128MB * 5000 / 5MB * 5(dirnum) = 20600
 #   command:
 #		sudo flash_stress_test.sh 5 20000
@@ -36,7 +36,7 @@
 #
 #********************************************************************/
 
-test_dir=/data/cfg/rockchip-test/flash_test
+test_dir=/data/rockchip-test/flash_test
 source_dir=$test_dir/src_test_data
 dest_dir=$test_dir/des_test_data
 md5_dir=$test_dir/md5_data
@@ -49,11 +49,11 @@ echo "flash_stress_test.sh 5 20000"
 
 test_max_count=200
 test_max_dir=5
-if [ $1 -ne 0 ] ;then
+if [ "$1" -ne 0 ] ;then
     test_max_dir=$1
 fi
 
-if [ $2 -ne 0 ] ;then
+if [ "$2" -ne 0 ] ;then
     test_max_count=$2
 fi
 
@@ -146,7 +146,7 @@ while [ $count -lt $test_max_count ]; do
     echo 3 > /proc/sys/vm/drop_caches
     sleep 5
     while [ $dir_loop -lt $test_max_dir ]; do
-    	#calc md5
+	#calc dir md5
     	echo "$count calc $dest_dir/${dir_loop} md5 start"
     	echo "$count calc $dest_dir/${dir_loop} md5 start" >> $test_dir/test_log.txt
     	cd $dest_dir/${dir_loop}
@@ -168,7 +168,7 @@ while [ $count -lt $test_max_count ]; do
     	dir_loop=$(($dir_loop+1))
     done
 	count=$(($count+1))
-    #if test fail, we can save file for debug
+        #if test fail, we can save file for debug
 	#rm -rf  $test_dir/$dest_dir/*
 	echo -----------------------------------------
 	echo "-------========You can see the result at and $test_dir/test_log.txt file=======------------"

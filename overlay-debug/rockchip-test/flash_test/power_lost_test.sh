@@ -1,30 +1,30 @@
 #!/bin/bash
-cat /userdata/cfg/rockchip/reboot_cnt
-test_dir=/userdata/cfg/rockchip/power_lost
-CNT=/userdata/cfg/rockchip/reboot_cnt
+cat /data/rockchip/reboot_cnt
+test_dir=/data/rockchip/power_lost
+CNT=/data/rockchip/reboot_cnt
 total=5000
 delay=3
 no=0
 
-if [ ! -e "/userdata/cfg/rockchip" ]; then
-	echo "no /userdata/cfg/rockchip"
-	mkdir -p /userdata/cfg/rockchip
+if [ ! -e "/data/rockchip" ]; then
+	echo "no /data/rockchip"
+	mkdir -p /data/rockchip
 fi
 
-if [ ! -e "/userdata/cfg/rockchip/power_lost_test.sh" ]; then
-	cp /rockchip/flash_test/power_lost_test.sh /userdata/cfg/rockchip/
+if [ ! -e "/data/rockchip/power_lost_test.sh" ]; then
+	cp /rockchip/flash_test/power_lost_test.sh /data/rockchip/
 fi
 
 if [ -e $CNT ]
 then
     cnt=`cat $CNT`
-	echo -e $(date)_power_up_$cnt >> /userdata/cfg/rockchip/power_lost_test.log
+	echo -e $(date)_power_up_$cnt >> /data/rockchip/power_lost_test.log
 else
     echo reset power lost count.
     cnt=0
     echo 0 > $CNT
-	rm /userdata/cfg/rockchip/power_lost_test.log
-	echo "$(date) power lost test begin" >> /userdata/cfg/rockchip/power_lost_test.log
+	rm /data/rockchip/power_lost_test.log
+	echo "$(date) power lost test begin" >> /data/rockchip/power_lost_test.log
 	mkdir -p $test_dir
 fi
 
@@ -33,22 +33,22 @@ then
 	echo power loat test finished!!!!!!!.
 	echo "off" > $CNT
 	echo "do cleaning ..."
-	rm /userdata/cfg/rockchip/power_lost_test.sh
-	rm -rf /userdata/cfg/rockchip/power_lost
+	rm /data/rockchip/power_lost_test.sh
+	rm -rf /data/rockchip/power_lost
 	rm -f $CNT
 	exit 0
 fi
 
 echo "current cnt = $cnt, total cnt = $total"
-echo "You can stop reboot by: echo off > /userdata/cfg/rockchip/reboot_cnt"
-echo "power lost test loop $cnt" >> /userdata/cfg/rockchip/power_lost_test.log
+echo "You can stop reboot by: echo off > /data/rockchip/reboot_cnt"
+echo "power lost test loop $cnt" >> /data/rockchip/power_lost_test.log
 sleep $delay
 if [ $cnt != "off" ]; then
 	echo "$cnt begin dd"
 else
 	echo "power lost test is off"
-	rm /userdata/cfg/rockchip/power_lost_test.sh
-	rm -rf /userdata/cfg/rockchip/power_lost
+	rm /data/rockchip/power_lost_test.sh
+	rm -rf /data/rockchip/power_lost
 	rm -f $CNT
 	exit 0
 fi
@@ -70,7 +70,7 @@ while true; do
 		rm $test_dir/test_dst
 		sync
 	else
-		echo "compare not equally" >> /userdata/cfg/rockchip/power_lost_test.log
+		echo "compare not equally" >> /data/rockchip/power_lost_test.log
 		exit
 	fi
 	sleep 0.1

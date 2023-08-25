@@ -1,7 +1,14 @@
 #!/bin/bash
 
-#/rockchip-test/npu2/aarch64/rknn_common_test /rockchip-test/npu2/model/RK3588/vgg16_max_pool_fp16.rknn /rockchip-test/npu2/model/dog_224x224.jpg 10
-
-###mipi camera is /dev/video8, can change for tests
-rknn_camera -d /dev/video8 -m /rockchip-test/npu2/model/RK3588/vgg16_max_pool_fp16.rknn
-
+COMPATIBLE=$(cat /proc/device-tree/compatible)
+if [[ $(expr $COMPATIBLE : ".*rk3588") -ne 0 ]]; then
+	rknn_common_test /usr/share/model/RK3588/mobilenet_v1.rknn /usr/share/model/dog_224x224.jpg 10
+elif [[ $(expr $COMPATIBLE : ".*rk3568") -ne 0 ]]; then
+	rknn_common_test /usr/share/model/RK3566_RK3568/mobilenet_v1.rknn /usr/share/model/dog_224x224.jpg 10
+elif [[ $(expr $COMPATIBLE : ".*rk3566") -ne 0 ]]; then
+	rknn_common_test /usr/share/model/RK3566_RK3568/mobilenet_v1.rknn /usr/share/model/dog_224x224.jpg 10
+elif [[ $(expr $COMPATIBLE : ".*rk3562") -ne 0 ]]; then
+	rknn_common_test /usr/share/model/RK3562/mobilenet_v1.rknn /usr/share/model/dog_224x224.jpg 10
+else
+	echo "The RKNPU2 did't support this Socs yet..."
+fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR_NPU=/rockchip-test/npu2
+DIR_NPU=`dirname $0`
 
 info_view()
 {
@@ -46,6 +46,6 @@ case ${NPU_CHOICE} in
 		rknn_demo_test
 		;;
 	*)
-		echo "not fount your input."
+		echo "not found your input."
 		;;
 esac

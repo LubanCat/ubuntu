@@ -1,6 +1,6 @@
 #!/bin/bash
 
-delay=10
+delay=8
 total=${1:-10000}
 fudev=/dev/sda
 CNT=/data/rockchip-test/reboot_cnt

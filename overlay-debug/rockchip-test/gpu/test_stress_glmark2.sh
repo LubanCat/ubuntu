@@ -17,6 +17,9 @@ elif [[  "$1" == "rk3399pro"  ]]; then
 elif [[  "$1" == "px30" || "$1" == "rk3326"  ]]; then
 	glmark2-es2 --run-forever --fullscreen --annotate
 
+elif [[  "$1" == "rk3562" ]]; then
+	glmark2-es2 --run-forever --fullscreen --annotate
+
 elif [[  "$1" == "rk3566" || "$1" == "rk3568"  ]]; then
 	glmark2-es2 --run-forever --fullscreen --annotate
 
@@ -48,6 +51,8 @@ elif [[ $(expr $COMPATIBLE : ".*rk3399") -ne 0 ]]; then
     CHIPNAME="rk3399"
 elif [[ $(expr $COMPATIBLE : ".*rk3399pro") -ne 0 ]]; then
     CHIPNAME="rk3399pro"
+elif [[ $(expr $COMPATIBLE : ".*rk3562") -ne 0 ]]; then
+    CHIPNAME="rk3562"
 elif [[ $(expr $COMPATIBLE : ".*rk3566") -ne 0 ]]; then
     CHIPNAME="rk3566"
 elif [[ $(expr $COMPATIBLE : ".*rk3568") -ne 0 ]]; then
@@ -71,7 +76,7 @@ COMPATIBLE=${COMPATIBLE#rockchip,}
 
 echo performance | tee $(find /sys/ -name *governor) /dev/null || true
 
-echo "run glmark2 wayland with fullscreen......"
+echo "run glmark2 x11 with fullscreen......"
 
 run_glmark2 ${CHIPNAME}
 
