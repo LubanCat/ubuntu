@@ -78,7 +78,7 @@ install_packages() {
         ISP=rkisp
         ;;
         rk356x|rk3566|rk3568)
-        MALI=bifrost-g52-g2p0
+        MALI=bifrost-g52-g13p0
         ISP=rkaiq_rk3568
         MIRROR=carp-rk356x
         ;;
