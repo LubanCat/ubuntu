@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR_CHROMIUM=/rockchip-test/chromium
+DIR_CHROMIUM=`dirname $0`
 
 info_view()
 {
@@ -37,6 +37,6 @@ case ${CHROMIUM_CHOICE} in
 		simplebrowser_test
 		;;
 	*)
-		echo "not fount your input."
+		echo "not found your input."
 		;;
 esac

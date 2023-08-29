@@ -2,7 +2,7 @@
 export DISPLAY=:0.0
 #export GST_DEBUG=*:5
 #export GST_DEBUG_FILE=/tmp/2.txt
-
+export mpp_syslog_perror=1
 # xv vo
 mpv --hwdec=rkmpp --vd-lavc-software-fallback=no --vo=xv /usr/local/test.mp4
 

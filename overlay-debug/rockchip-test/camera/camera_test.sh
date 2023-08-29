@@ -1,12 +1,12 @@
 #!/bin/bash
 
-DIR_CAMERA=/rockchip-test/camera
+DIR_CAMERA=`dirname $0`
 
 info_view()
 {
     echo "*****************************************************"
     echo "***                                               ***"
-    echo "***            CAMERA TEST                        ***"
+    echo "***                CAMERA TEST                    ***"
     echo "***                                               ***"
     echo "*****************************************************"
 }
@@ -14,9 +14,9 @@ info_view()
 info_view
 echo "*****************************************************"
 echo "camera rkisp test:                                  1"
-echo "camera rkaiq test:                                  2"
-echo "camera usb test:                                    3"
-echo "camera stresstest:                                  4"
+echo "camera usb test:                                    2"
+echo "camera stresstest by v4l2:                          3"
+echo "camera stresstest by rkisp_demo:                    4"
 echo "*****************************************************"
 
 read -t 30 CAMERA_CHOICE
@@ -26,19 +26,19 @@ camera_rkisp_test()
 	bash ${DIR_CAMERA}/camera_rkisp_test.sh
 }
 
-camera_rkaiq_test()
-{
-	bash ${DIR_CAMERA}/camera_rkaiq_test.sh
-}
-
 camera_usb_test()
 {
 	bash ${DIR_CAMERA}/camera_usb_test.sh
 }
 
-camera_stresstest()
+camera_stresstest_v4l2()
 {
-	bash ${DIR_CAMERA}/camera_stresstest.sh 1000
+	bash ${DIR_CAMERA}/camera_stresstest_v4l2.sh
+}
+
+camera_stresstest_rkisp_demo()
+{
+	bash ${DIR_CAMERA}/camera_stresstest_rkisp_demo.sh
 }
 
 case ${CAMERA_CHOICE} in
@@ -46,15 +46,15 @@ case ${CAMERA_CHOICE} in
 		camera_rkisp_test
 		;;
 	2)
-		camera_rkaiq_test
-		;;
-	3)
 		camera_usb_test
 		;;
+	3)
+		camera_stresstest_v4l2
+		;;
 	4)
-		camera_stresstest
+		camera_stresstest_rkisp_demo
 		;;
 	*)
-		echo "not fount your input."
+		echo "not found your input."
 		;;
 esac

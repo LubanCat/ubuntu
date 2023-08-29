@@ -28,6 +28,6 @@ case ${RECOVERY_CHOICE} in
 		recovery_function_test
 		;;
 	*)
-		echo "not fount your input."
+		echo "not found your input."
 		;;
 esac

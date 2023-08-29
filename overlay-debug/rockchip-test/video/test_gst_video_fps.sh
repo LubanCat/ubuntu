@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export mpp_syslog_perror=1
+
 URI=/oem/SampleVideo_1280x720_5mb.mp4
 
 if [ "$1" != "" ]

@@ -1,31 +1,11 @@
 #!/bin/bash
 
-URI=/oem/SampleVideo_1280x720_5mb.mp4
+export mpp_syslog_perror=1
 
-if [ "$1" != "" ]
-then
-    URI=$1
-    if [ "${URI:0:1}" != "/" ]
-    then
-        URI=$(readlink -f $URI)
-    fi
-fi
+export PREFERED_VIDEOSINK=xvimagesink
+export QT_GSTREAMER_WIDGET_VIDEOSINK=${PREFERED_VIDEOSINK}
+export QT_GSTREAMER_WINDOW_VIDEOSINK=${PREFERED_VIDEOSINK}
 
-if [ "${URI:0:1}" == "/" ]
-then
-    URI=file://$URI
-fi
+echo performance | tee $(find /sys/ -name *governor) /dev/null || true
 
-while [ true ]
-do
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps0 video-sink="xvimagesink render-rectangle=\"<0,180,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps1 video-sink="xvimagesink render-rectangle=\"<360,180,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps2 video-sink="xvimagesink render-rectangle=\"<720,180,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps3 video-sink="xvimagesink render-rectangle=\"<0,420,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps4 video-sink="xvimagesink render-rectangle=\"<360,420,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps5 video-sink="xvimagesink render-rectangle=\"<720,420,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps6 video-sink="xvimagesink render-rectangle=\"<0,660,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps7 video-sink="xvimagesink render-rectangle=\"<360,660,360,240>\"" text-overlay=false &
-    GST_DEBUG=fps*:5 gst-launch-1.0 uridecodebin uri=$URI ! fpsdisplaysink name=fps8 video-sink="xvimagesink render-rectangle=\"<720,660,360,240>\"" text-overlay=false
-done
-
+multivideoplayer -platform xcb

@@ -3,7 +3,7 @@
 ACTION=="remove", GOTO="rk_internal_storage_end"
 ENV{UDEV_DISABLE_ROCKCHIP_STORAGE_RULES_FLAG}=="1", GOTO="rk_internal_storage_end"
 SUBSYSTEM!="block|mtd", GOTO="rk_internal_storage_end"
-KERNEL!="mmcblk*[0-9]|rkflash*|rknand*|mtd*", GOTO="rk_internal_storage_end"
+KERNEL!="mmcblk*[0-9]|rkflash*|rknand*|mtd*|nvme*", GOTO="rk_internal_storage_end"
 
 # ignore partitions that span the entire disk
 TEST=="whole_disk", GOTO="rk_internal_storage_end"
@@ -22,5 +22,8 @@ ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block
 
 # for mtd partition name /dev/block/by-name link
 ENV{DEVNAME}=="/dev/mtd*", ENV{DEVTYPE}=="mtd", ATTRS{name}=="?*", SYMLINK+="block/by-name/$attr{name}"
+
+# for nvme partition name /dev/block/by-name link
+ENV{DEVNAME}=="/dev/nvme*", ENV{DEVTYPE}=="disk", ATTRS{name}=="?*", SYMLINK+="block/by-name/$attr{name}"
 
 LABEL="rk_internal_storage_end"
