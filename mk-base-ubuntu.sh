@@ -54,11 +54,11 @@ sudo rm -rf $TARGET_ROOTFS_DIR/
 if [ ! -d $TARGET_ROOTFS_DIR ] ; then
     sudo mkdir -p $TARGET_ROOTFS_DIR
 
-    if [ ! -e 	ubuntu-base-22.04.2-base-$ARCH.tar.gz ]; then
-        echo "\033[36m wget 	ubuntu-base-22.04.2-base-"$ARCH".tar.gz \033[0m"
-        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.2-base-$ARCH.tar.gz
+    if [ ! -e 	ubuntu-base-22.04.3-base-$ARCH.tar.gz ]; then
+        echo "\033[36m wget 	ubuntu-base-22.04.3-base-"$ARCH".tar.gz \033[0m"
+        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.3-base-$ARCH.tar.gz
     fi
-    sudo tar -xzf ubuntu-base-22.04.2-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
+    sudo tar -xzf ubuntu-base-22.04.3-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
     sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
     sudo cp sources.list $TARGET_ROOTFS_DIR/etc/apt/sources.list
 
@@ -130,13 +130,18 @@ fi
 
 if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     apt purge ibus firefox -y
+
+    echo -e "\033[47;36m Install Chinese fonts.................... \033[0m"
     \${APT_INSTALL} language-pack-zh-hans fonts-noto-cjk-extra gnome-user-docs-zh-hans language-pack-gnome-zh-hans
 
     # set default xinput for fcitx
     \${APT_INSTALL} fcitx fcitx-table fcitx-googlepinyin fcitx-pinyin fcitx-config-gtk
     sed -i 's/default/fcitx/g' /etc/X11/xinit/xinputrc
 
-    echo -e "\033[47;36m Install Chinese fonts.................... \033[0m"
+    \${APT_INSTALL} ipython3 jupyter
+fi
+
+if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     # Uncomment zh_CN.UTF-8 for inclusion in generation
     sed -i 's/^# *\(zh_CN.UTF-8\)/\1/' /etc/locale.gen
     echo "LANG=zh_CN.UTF-8" >> /etc/default/locale
@@ -145,9 +150,15 @@ if [[ "$TARGET" == "gnome-full" ||  "$TARGET" == "xfce-full" ]]; then
     locale-gen zh_CN.UTF-8
 
     # Export env vars
-    echo "export LC_ALL=zh_CN.UTF-8" > /etc/profile.d/zh_CN
-    echo "export LANG=zh_CN.UTF-8" >> /etc/profile.d/zh_CN
-    echo "export LANGUAGE=zh_CN.UTF-8" >> /etc/profile.d/zh_CN
+    echo "LC_ALL=zh_CN.UTF-8" >> /etc/environment    
+    echo "LANG=zh_CN.UTF-8" >> /etc/environment
+    echo "LANGUAGE=zh_CN:zh:en_US:en" >> /etc/environment
+
+    echo "export LC_ALL=zh_CN.UTF-8" >> /etc/profile.d/zh_CN.sh
+    echo "export LANG=zh_CN.UTF-8" >> /etc/profile.d/zh_CN.sh
+    echo "export LANGUAGE=zh_CN:zh:en_US:en" >> /etc/profile.d/zh_CN.sh
+
+    \${APT_INSTALL} $(check-language-support)
 fi
 
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
