@@ -37,15 +37,14 @@ install_packages() {
 		ISP=rkisp
 		;;
         rk3568|rk3566)
-		MALI=bifrost-g52-g2p0
+		MALI=bifrost-g52-g13p0
 		ISP=rkaiq_rk3568
-		[ -e /usr/lib/aarch64-linux-gnu/ ] && tar xvf /rknpu2-rk3568-*.tar -C /
+		[ -e /usr/lib/aarch64-linux-gnu/ ] && tar xvf /rknpu2-*.tar -C /
 		;;
         rk3588|rk3588s)
 		ISP=rkaiq_rk3588
-		MALI=valhall-g610-g6p0
-		sed -i "s/none/always/g" /etc/X11/xorg.conf.d/20-modesetting.conf
-		[ -e /usr/lib/aarch64-linux-gnu/ ] && tar xvf /rknpu2-rk3588-*.tar -C /
+		MALI=valhall-g610-g13p0
+		[ -e /usr/lib/aarch64-linux-gnu/ ] && tar xvf /rknpu2-*.tar -C /
 		;;
     esac
 }
@@ -163,7 +162,7 @@ fi
 echo dec > /dev/video-dec0
 echo enc > /dev/video-enc0
 chmod 660 /dev/video-*
-chown root.video /dev/video-*
+chown root:video /dev/video-*
 
 # The chromium using fixed pathes for libv4l2.so
 ln -rsf /usr/lib/*/libv4l2.so /usr/lib/

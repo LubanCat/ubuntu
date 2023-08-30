@@ -34,6 +34,11 @@ board_info() {
                 BOARD_DTB='rk3566-lubancat-0.dtb'
                 BOARD_uEnv='uEnvLubanCatZN.txt'
                 ;;
+            0201)
+                BOARD_NAME='LubanCat-1H'
+                BOARD_DTB='rk3566-lubancat-1h.dtb'
+                BOARD_uEnv='uEnvLubanCat1H.txt'
+                ;;                
             0300)
                 BOARD_NAME='LubanCat-0W'
                 BOARD_DTB='rk3566-lubancat-0.dtb'
@@ -60,6 +65,11 @@ board_info() {
                 BOARD_DTB='rk3568-lubancat-2n.dtb'
                 BOARD_uEnv='uEnvLubanCat2N.txt'
                 ;;
+            0501)
+                BOARD_NAME='LubanCat-2H'
+                BOARD_DTB='rk3568-lubancat-2h.dtb'
+                BOARD_uEnv='uEnvLubanCat2H.txt'
+                ;;    
             0700)
                 BOARD_NAME='LubanCat-2IOF'
                 BOARD_DTB='rk3568-lubancat-2io.dtb'
@@ -177,15 +187,20 @@ do
     sleep 0.1
 done
 
-if [ ! -e "/boot/boot_init" ] ;
-then
-
-    if [ ! -e "/dev/disk/by-partlabel/userdata" ] ;
-    then
-
+if [ ! -e "/boot/boot_init" ] ; then
+    if [ ! -e "/dev/disk/by-partlabel/userdata" ] ; then
         if [ ! -L "/boot/rk-kernel.dtb" ] ; then
-            mount /dev/disk/by-partlabel/boot /boot
-            echo "PARTLABEL=boot  /boot  auto  defaults  0 2" >> /etc/fstab
+            for x in $(cat /proc/cmdline); do
+                case $x in
+                root=*)
+                    Root_Part=${x#root=}
+                    Boot_Part="${Root_Part::-2}"p2
+                    ;;
+                esac
+            done
+
+            mount "$Boot_Part" /boot
+            echo "$Boot_Part  /boot  auto  defaults  0 2" >> /etc/fstab
         fi
 
         service lightdm stop || echo "skip error"
