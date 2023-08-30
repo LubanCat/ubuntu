@@ -23,32 +23,22 @@ sudo apt-get install -f
 
 ## 构建 Ubuntu22.04镜像（仅支持64bit）
 
-如果需要构建lite版本（控制台版，无桌面），执行1.a、2.a。
+- lite：控制台版，无桌面
+- xfce：桌面版，使用xfce桌面套件
+- xfce-full：桌面版，使用xfce桌面套件+更多推荐软件包
+- gnome：桌面版，使用gnome桌面套件
+- gnome-full：桌面版，使用gnome桌面套件+更多推荐软件包
 
-如果需要构建desktop版本（带桌面），执行1.b、2.b。
+
+#### step1.构建基础 Ubuntu 系统。
 
 ```
-######### step 1 #########
-# 1.a 构建 lite 版本基础镜像
-./mk-base-lite-ubuntu.sh
+# 运行以下脚本，根据提示选择要构建的版本
+./mk-base-ubuntu.sh
+```
+#### step2.添加 rk overlay 层,并打包ubuntu-rootfs镜像
 
-# 1.b 构建 desktop 版本基础镜像（默认xfce）
-TARGET=desktop ./mk-base-desktop-ubuntu.sh
-
-# 1.c 构建指定桌面套件的基础镜像
-./mk-base-gnome-ubuntu.sh
-./mk-base-xfce-ubuntu.sh
-
-######### step 2 #########
-# 添加 rk overlay 层,并打包ubuntu-rootfs镜像
-# 2.a
-VERSION=debug ./mk-lite-rootfs.sh
-
-# 2.b SOC参数根据实际情况选择，如rk356x、rk3588
-VERSION=debug TARGET=desktop ./mk-desktop-rootfs.sh
-
-# 2.c 构建镜像，与step1指定的桌面套件版本相同
-VERSION=debug ./mk-gnome-rootfs.sh
-VERSION=debug ./mk-xfce-rootfs.sh
-
+```
+# 运行以下脚本，根据提示选择要构建处理器版本和ubuntu的版本
+./mk-ubuntu-rootfs.sh
 ```
