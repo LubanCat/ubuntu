@@ -193,7 +193,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
-\${APT_INSTALL} fire-config u-boot-tools
+\${APT_INSTALL} fire-config u-boot-tools logrotate
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
     \${APT_INSTALL} gdisk fire-config-gui
     #Desktop background picture
@@ -301,6 +301,7 @@ fi
 echo -e "\033[47;36m ------- Custom Script ------- \033[0m"
 systemctl mask systemd-networkd-wait-online.service
 systemctl mask NetworkManager-wait-online.service
+systemctl disable hostapd
 rm /lib/systemd/system/wpa_supplicant@.service
 
 echo -e "\033[47;36m  ---------- Clean ----------- \033[0m"
