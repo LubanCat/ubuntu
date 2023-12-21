@@ -129,6 +129,7 @@ parameter_init()
 				make_config_string mtp
 				;;
 			usb_adb_en)
+				sleep 3
 				ADB_EN=on
 				make_config_string adb
 				;;
