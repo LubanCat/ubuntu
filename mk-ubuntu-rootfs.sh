@@ -132,7 +132,14 @@ sudo mkdir -p $TARGET_ROOTFS_DIR/packages/install_packages
 sudo cp -rpf packages/$ARCH/libmali/libmali-*$MALI*-x11*.deb $TARGET_ROOTFS_DIR/packages/install_packages
 sudo cp -rpf packages/$ARCH/${ISP:0:5}/camera_engine_$ISP*.deb $TARGET_ROOTFS_DIR/packages/install_packages
 
-sudo cp -rpf ../kernel/extboot/kerneldeb $TARGET_ROOTFS_DIR/boot/
+#linux kernel deb
+if [ -e ../linux-headers* ]; then
+    Image_Deb=$(basename ../linux-headers*)
+    sudo mkdir -p $TARGET_ROOTFS_DIR/boot/kerneldeb
+    sudo touch $TARGET_ROOTFS_DIR/boot/build-host
+    sudo cp -vrpf ../${Image_Deb} $TARGET_ROOTFS_DIR/boot/kerneldeb
+    sudo cp -vrpf ../${Image_Deb/headers/image} $TARGET_ROOTFS_DIR/boot/kerneldeb
+fi
 
 # overlay folder
 sudo cp -rpf overlay/* $TARGET_ROOTFS_DIR/
@@ -212,7 +219,6 @@ fi
 apt install -fy --allow-downgrades /packages/install_packages/*.deb
 
 apt install -fy --allow-downgrades /boot/kerneldeb/* || true
-rm -rf /boot/*
 
 if [[ "$TARGET" == "gnome" ||  "$TARGET" == "xfce" || "$TARGET" == "gnome-full" || "$TARGET" == "xfce-full" ]]; then
     echo -e "\033[47;36m ----- power management ----- \033[0m"
@@ -328,6 +334,7 @@ rm -rf /home/$(whoami)
 rm -rf /var/lib/apt/lists/*
 rm -rf /var/cache/
 rm -rf /packages/
+rm -rf /boot/*
 
 EOF
 
