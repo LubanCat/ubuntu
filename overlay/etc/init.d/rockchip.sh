@@ -139,8 +139,11 @@ then
     touch /usr/local/first_boot_flag
 fi
 
-#usb configfs reset
-/usr/bin/usbdevice restart
+if [ $(cat /etc/init.d/.usb_config) != "usb_adb_en" ]; then
+    #usb configfs reset
+    echo run /usr/bin/usbdevice restart
+    /usr/bin/usbdevice restart
+fi
 
 # support power management
 if [ -e "/usr/sbin/pm-suspend" -a -e /etc/Powermanager ] ;
