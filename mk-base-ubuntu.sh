@@ -54,11 +54,11 @@ sudo rm -rf $TARGET_ROOTFS_DIR/
 if [ ! -d $TARGET_ROOTFS_DIR ] ; then
     sudo mkdir -p $TARGET_ROOTFS_DIR
 
-    if [ ! -e 	ubuntu-base-22.04.3-base-$ARCH.tar.gz ]; then
-        echo "\033[36m wget 	ubuntu-base-22.04.3-base-"$ARCH".tar.gz \033[0m"
-        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.3-base-$ARCH.tar.gz
+    if [ ! -e ubuntu-base-22.04.4-base-$ARCH.tar.gz ]; then
+        echo "\033[36m wget ubuntu-base-22.04.4-base-"$ARCH".tar.gz \033[0m"
+        wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.4-base-$ARCH.tar.gz
     fi
-    sudo tar -xzf ubuntu-base-22.04.3-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
+    sudo tar -xzf ubuntu-base-22.04.4-base-$ARCH.tar.gz -C $TARGET_ROOTFS_DIR/
     sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
     sudo cp sources.list $TARGET_ROOTFS_DIR/etc/apt/sources.list
 
