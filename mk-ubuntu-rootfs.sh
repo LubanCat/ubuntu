@@ -132,6 +132,15 @@ sudo mkdir -p $TARGET_ROOTFS_DIR/packages/install_packages
 sudo cp -rpf packages/$ARCH/libmali/libmali-*$MALI*-x11*.deb $TARGET_ROOTFS_DIR/packages/install_packages
 sudo cp -rpf packages/$ARCH/${ISP:0:5}/camera_engine_$ISP*.deb $TARGET_ROOTFS_DIR/packages/install_packages
 
+#linux kernel deb
+if [ -e ../linux-headers* ]; then
+    Image_Deb=$(basename ../linux-headers*)
+    sudo mkdir -p $TARGET_ROOTFS_DIR/boot/kerneldeb
+    sudo touch $TARGET_ROOTFS_DIR/boot/build-host
+    sudo cp -vrpf ../${Image_Deb} $TARGET_ROOTFS_DIR/boot/kerneldeb
+    sudo cp -vrpf ../${Image_Deb/headers/image} $TARGET_ROOTFS_DIR/boot/kerneldeb
+fi
+
 # overlay folder
 sudo cp -rpf overlay/* $TARGET_ROOTFS_DIR/
 
@@ -193,7 +202,7 @@ chmod +x /etc/rc.local
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
-\${APT_INSTALL} fire-config u-boot-tools
+\${APT_INSTALL} fire-config u-boot-tools logrotate
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
     \${APT_INSTALL} gdisk fire-config-gui
     #Desktop background picture
@@ -208,6 +217,8 @@ elif [ "$TARGET" == "lite" ]; then
 fi
 
 apt install -fy --allow-downgrades /packages/install_packages/*.deb
+
+apt install -fy --allow-downgrades /boot/kerneldeb/* || true
 
 if [[ "$TARGET" == "gnome" ||  "$TARGET" == "xfce" || "$TARGET" == "gnome-full" || "$TARGET" == "xfce-full" ]]; then
     echo -e "\033[47;36m ----- power management ----- \033[0m"
@@ -290,6 +301,7 @@ fi
 echo -e "\033[47;36m ------- Custom Script ------- \033[0m"
 systemctl mask systemd-networkd-wait-online.service
 systemctl mask NetworkManager-wait-online.service
+systemctl disable hostapd
 rm /lib/systemd/system/wpa_supplicant@.service
 
 echo -e "\033[47;36m  ---------- Clean ----------- \033[0m"
@@ -311,6 +323,7 @@ rm -rf /home/$(whoami)
 rm -rf /var/lib/apt/lists/*
 rm -rf /var/cache/
 rm -rf /packages/
+rm -rf /boot/*
 
 EOF
 
