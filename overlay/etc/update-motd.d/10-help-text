@@ -6,3 +6,6 @@ printf "\n"
 printf " * Documentation:  http://doc.embedfire.com\n"
 printf " * Management:     http://www.embedfire.com\n"
 
+if [ -e /etc/build-release ];then 
+    cat /etc/build-release 
+fi
