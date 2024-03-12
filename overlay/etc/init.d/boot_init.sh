@@ -92,12 +92,31 @@ board_info() {
                 BOARD_uEnv='uEnvLubanCat-series.txt'
                 ;;
         esac
+    elif [[ "$2" == "rk3562" ]]; then
+		case $1 in
+            0000)
+                BOARD_NAME='LubanCat-A2IO'
+                BOARD_DTB='rk3562-lubancat-a2io.dtb'
+                BOARD_uEnv='uEnvLubanCatA2IO.txt'
+                ;;
+			*)
+				echo "Device ID Error !!!"
+				BOARD_NAME='LubanCat-series.dtb'
+				BOARD_DTB='rk3562-lubancat-rk_series.dtb'
+				BOARD_uEnv='uEnvLubanCat-series.txt'
+				;;	
+		esac
     elif [[ "$2" == "rk3588" ||  "$2" == "rk3588s" ]]; then
             case $1 in
             0101)
                 BOARD_NAME='LubanCat-4'
                 BOARD_DTB='rk3588s-lubancat-4.dtb'
                 BOARD_uEnv='uEnvLubanCat4.txt'
+                ;;
+            0102)
+                BOARD_NAME='LubanCat-4 v1'
+                BOARD_DTB='rk3588s-lubancat-4-v1.dtb'
+                BOARD_uEnv='uEnvLubanCat4-V1.txt'
                 ;;
             0201)
                 BOARD_NAME='LubanCat-4IOF'
