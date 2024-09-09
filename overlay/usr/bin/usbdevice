@@ -48,10 +48,10 @@ USB_CONFIGS_DIR=$USB_GADGET_DIR/configs/b.1
 USB_CONFIGS_STRINGS_DIR=$USB_CONFIGS_DIR/$USB_STRINGS_ATTR
 
 # Make sure that we own this session (pid equals sid)
-if ! ps x -o pid,sid | grep -wq "$$$"; then
-	setsid $0 $@
-	exit $?
-fi
+# if ! ps x -o pid,sid | grep -wq "$$$"; then
+# 	setsid $0 $@
+# 	exit $?
+# fi
 
 # ---- helper functions
 usb_msg()
