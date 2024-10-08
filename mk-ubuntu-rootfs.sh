@@ -221,6 +221,8 @@ if [ $MIRROR ]; then
     \${APT_INSTALL} fire-config lbc-test
 fi
 
+apt purge initramfs-tools -y
+
 \${APT_INSTALL} u-boot-tools edid-decode logrotate
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
     \${APT_INSTALL} gdisk
