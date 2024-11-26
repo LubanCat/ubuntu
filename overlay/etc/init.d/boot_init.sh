@@ -14,6 +14,11 @@ board_info() {
                 BOARD_DTB='rk3566-lubancat-1io.dtb'
                 BOARD_uEnv='uEnvLubanCat1IO.txt'
                 ;;
+            0007)
+                BOARD_NAME='LubanCat-1IO-test'
+                BOARD_DTB='rk3566-lubancat-1io-test.dtb'
+                BOARD_uEnv='uEnvLubanCat1IO-test.txt'
+                ;;
             0002)
                 BOARD_NAME='LubanCat-1IOB'
                 BOARD_DTB='rk3566-lubancat-1io.dtb'
