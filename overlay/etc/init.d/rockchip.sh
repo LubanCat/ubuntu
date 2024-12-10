@@ -144,7 +144,7 @@ then
     rm -rf /*.tar
 
     # The base target does not come with lightdm/rkaiq_3A
-    if [ -e /etc/gdm3/daemon.conf ]; then
+    if [ -e /etc/gdm3/custom.conf ]; then
         systemctl restart gdm3.service || true
     elif [ -e /etc/lightdm/lightdm.conf ]; then
         systemctl restart lightdm.service || true
