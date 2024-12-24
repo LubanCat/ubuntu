@@ -85,6 +85,11 @@ board_info() {
                 BOARD_DTB='rk3568-lubancat-2n-v2.dtb'
                 BOARD_uEnv='uEnvLubanCat2N-V2.txt'
                 ;;
+            0502)
+                BOARD_NAME='LubanCat-2N v3'
+                BOARD_DTB='rk3568-lubancat-2n-v3.dtb'
+                BOARD_uEnv='uEnvLubanCat2N-V3.txt'
+                ;;
             0601)
                 BOARD_NAME='LubanCat-2H'
                 BOARD_DTB='rk3568-lubancat-2h.dtb'
@@ -197,7 +202,7 @@ board_id() {
     ADC_voltage_scale=$(cat /sys/bus/iio/devices/iio\:device0/in_voltage_scale)
     echo "ADC_voltage_scale:"$ADC_voltage_scale
 
-    SOC_type=$(cat /proc/device-tree/compatible | cut -d,  -f 3)
+    SOC_type=$(cat /proc/device-tree/compatible | cut -d,  -f 3 | sed 's/\x0//g')
     echo "SOC_type:"$SOC_type
 
     ADC_CH2_RAW=$(cat /sys/bus/iio/devices/iio\:device0/in_voltage2_raw)
