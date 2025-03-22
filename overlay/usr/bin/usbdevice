@@ -28,10 +28,22 @@
 LOG_FILE=/tmp/usbdevice.log
 USB_FUNCS_FILE=/tmp/.usbdevice
 
-alias usb_enable='touch $USB_FUNCS_FILE'
-alias usb_disable='rm -f $USB_FUNCS_FILE'
-alias usb_is_enabled='[ -f $USB_FUNCS_FILE ]'
-alias usb_set_started='echo $USB_FUNCS > $USB_FUNCS_FILE'
+usb_enable() {
+	touch "$USB_FUNCS_FILE"
+}
+
+usb_disable() {
+	rm -f "$USB_FUNCS_FILE"
+}
+
+usb_is_enabled() {
+	[ -f "$USB_FUNCS_FILE" ]
+}
+
+usb_set_started() {
+	echo "$USB_FUNCS" > "$USB_FUNCS_FILE"
+}
+
 usb_get_started()
 {
 	usb_is_enabled || return 0
@@ -493,7 +505,7 @@ usb_prepare()
 	# Allow function/variable overriding
 	[ -d /etc/usbdevice.d ] && . /etc/usbdevice.d/*
 
-	UMS_FILE=${UMS_FILE:-/userdata/ums_shared.img}
+	UMS_FILE=${UMS_FILE:-/ums_shared.img}
 	UMS_SIZE=${UMS_SIZE:-256M}
 	UMS_FSTYPE=${UMS_FSTYPE:-vfat}
 	UMS_MOUNT=${UMS_MOUNT:-0}
@@ -547,7 +559,7 @@ usb_start()
 				continue
 			fi
 
-			cd $USB_FUNCTIONS_DIR/$instance &>/dev/null || continue
+			cd $USB_FUNCTIONS_DIR/$instance
 
 			usb_run_stage $func prepare
 
@@ -561,7 +573,7 @@ usb_start()
 
 	for func in $USB_FUNCS; do
 		for instance in $(usb_instances $func); do
-			cd $USB_FUNCTIONS_DIR/$instance &>/dev/null || continue
+			cd $USB_FUNCTIONS_DIR/$instance
 
 			usb_msg "Starting instance: $instance"
 			usb_run_stage $func start
@@ -582,7 +594,7 @@ usb_stop()
 
 	for func in $USB_FUNCS; do
 		for instance in $(usb_instances $func); do
-			cd $USB_FUNCTIONS_DIR/$instance &>/dev/null || continue
+			cd $USB_FUNCTIONS_DIR/$instance
 
 			usb_msg "Stopping instance: $instance"
 			usb_run_stage $func stop
