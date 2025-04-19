@@ -180,7 +180,7 @@ board_info() {
 }
 
 # voltage_scale
-# 1.7578125 8bit
+# 1.7578125 10bit
 # 0.439453125 12bit
 get_index(){
 	ADC_RAW=$1
