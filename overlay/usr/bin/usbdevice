@@ -394,11 +394,10 @@ HID_INSTANCES=${HID_INSTANCES:-hid.usb0}
 
 hid_prepare()
 {
+	printf '\005\001\011\006\241\001\005\007\031\340\051\347\025\000\045\001\165\001\225\010\201\002\225\001\165\010\201\003\225\005\165\001\005\010\031\001\051\005\221\002\225\001\165\003\221\003\225\006\165\010\025\000\045\145\005\007\031\000\051\145\201\000\300' > report_desc
 	echo 1 > protocol
 	echo 1 > subclass
 	echo 8 > report_length
-	echo -ne "\\x05\\x01\\x09\\x06\\xa1\\x01\\x05\\x07\\x19\\xe0\\x29\\xe7\\x15\\x00\\x25\\x01\\x75\\x01\\x95\\x08\\x81\\x02\\x95\\x01\\x75\\x08\\x81\\x03\\x95\\x05\\x75\\x01\\x05\\x08\\x19\\x01\\x29\\x05\\x91\\x02\\x95\\x01\\x75\\x03\\x91\\x03\\x95\\x06\\x75\\x08\\x15\\x00\\x25\\x65\\x05\\x07\\x19\\x00\\x29\\x65\\x81\\x00\\xc0" \
-		> report_desc
 }
 
 # ---- ums
@@ -516,7 +515,7 @@ usb_prepare()
 		usb_run_stage usb init
 	fi
 
-	USB_STATE=$(cat /sys/class/android_usb/android0/state)
+	USB_STATE=$(cat /sys/class/android_usb/android*/state 2>/dev/null | head -1)
 	USB_UDC=$(ls /sys/class/udc/ | head -n 1)
 
 	# Parse started USB functions
