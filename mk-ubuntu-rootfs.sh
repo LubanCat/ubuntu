@@ -218,7 +218,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
 if [ $MIRROR ]; then
-    \${APT_INSTALL} fire-config lbc-test
+    \${APT_INSTALL} fire-config lbc-test usbmount
 fi
 
 apt purge initramfs-tools -y
