@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #    10-help-text - print the help text associated with the distro
 
