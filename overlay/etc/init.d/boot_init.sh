@@ -253,6 +253,7 @@ if [ ! -e "/boot/boot_init" ] ; then
 
 		apt install -fy --allow-downgrades /boot/kerneldeb/* || true
 		apt-mark hold linux-headers-$(uname -r) linux-image-$(uname -r) || true
+		update-initramfs -c -k $(uname -r)
 
 		ln -sf dtb/$BOARD_DTB /boot/rk-kernel.dtb
 		ln -sf $BOARD_uEnv /boot/uEnv/uEnv.txt

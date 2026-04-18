@@ -1,0 +1,35 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+. /scripts/functions
+
+if read_fstab_entry /boot; then
+    log_begin_msg "Running fsck on /boot partition"
+
+    BOOTDEV_RAW="$MNT_FSNAME"
+
+    _log_msg "Find /boot partition $BOOTDEV_RAW"
+
+    BOOTDEV=$(resolve_device "$BOOTDEV_RAW")
+    [ -z "$BOOTDEV" ] && BOOTDEV="$BOOTDEV_RAW"
+
+    _checkfs_once "$BOOTDEV" boot auto
+else
+    log_warning_msg "[fsck_boot] /boot not found in fstab"
+fi
+
+exit 0
