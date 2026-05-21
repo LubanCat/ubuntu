@@ -231,6 +231,7 @@ elif [[ "$TARGET" == "xfce" || "$TARGET" == "xfce-full" ]]; then
     \apt-get remove -y gnome-bluetooth
     \${APT_INSTALL} bluez bluez-tools
     [[-z $MIRROR ]] && \${APT_INSTALL} fire-config-gui
+    apt remove -fy gdm3
     #Desktop background picture
     ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/xfce4/backdrops/xubuntu-wallpaper.png
     ln -sf /usr/share/xfce4/backdrops/lubancat-wallpaper.png /usr/share/backgrounds/xfce/xfce-stripes.png
