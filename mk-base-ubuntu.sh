@@ -88,6 +88,7 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 export LC_ALL=C.UTF-8
 
 apt-get -y update
+\${APT_INSTALL} auto-apt-proxy
 apt-get -f -y upgrade
 
 if [ "$TARGET" == "gnome" ]; then
