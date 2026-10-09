@@ -221,7 +221,7 @@ if [ $MIRROR ]; then
     \${APT_INSTALL} fire-config lbc-test usbmount
 fi
 
-\${APT_INSTALL} u-boot-tools edid-decode logrotate
+\${APT_INSTALL} u-boot-tools edid-decode logrotate mmc-utils fio libaio-dev
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
     \${APT_INSTALL} gdisk
     [[-z $MIRROR ]] && \${APT_INSTALL} fire-config-gui
