@@ -218,7 +218,8 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
 if [ $MIRROR ]; then
-    \${APT_INSTALL} fire-config lbc-test usbmount
+    \${APT_INSTALL} fire-config lbc-test
+    \${APT_INSTALL} --install-recommends usbmount
 fi
 
 \${APT_INSTALL} u-boot-tools edid-decode logrotate mmc-utils fio libaio-dev
