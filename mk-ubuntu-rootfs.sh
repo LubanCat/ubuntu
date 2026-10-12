@@ -203,7 +203,8 @@ export DEBIAN_FRONTEND=noninteractive
 export APT_INSTALL="apt-get install -fy --allow-downgrades"
 
 echo -e "\033[47;36m ---------- LubanCat -------- \033[0m"
-\${APT_INSTALL} fire-config u-boot-tools logrotate usbmount
+\${APT_INSTALL} fire-config u-boot-tools logrotate
+\${APT_INSTALL} --install-recommends usbmount
 if [[ "$TARGET" == "gnome" || "$TARGET" == "gnome-full" ]]; then
     \${APT_INSTALL} gdisk fire-config-gui
     #Desktop background picture
